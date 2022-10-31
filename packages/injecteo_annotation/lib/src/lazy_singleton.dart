@@ -1,7 +1,8 @@
-import 'package:injecteo_annotation/src/factory.dart';
+import 'package:injecteo_annotation/src/injectable.dart';
 
 /// Annotated class will generate registerLazySingleton function
-class LazySingleton extends Factory {
+///
+class LazySingleton extends Injectable {
   const LazySingleton({
     super.as,
     super.env,

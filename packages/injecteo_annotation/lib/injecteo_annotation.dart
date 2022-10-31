@@ -1,6 +1,12 @@
 library injecteo_annotation;
 
-export 'src/di_initialize.dart';
-export 'src/factory.dart';
+export 'src/dispose_method.dart';
+export 'src/environment.dart';
+export 'src/factory_method.dart';
+export 'src/factory_param.dart';
+export 'src/injectable.dart';
+export 'src/injecteo_initializer.dart';
 export 'src/lazy_singleton.dart';
+export 'src/named.dart';
+export 'src/pre_resolve.dart';
 export 'src/singleton.dart';

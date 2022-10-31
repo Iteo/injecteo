@@ -1,1 +1,22 @@
 include: package:lint/analysis_options.yaml
+analyzer:
+  strong-mode:
+    implicit-casts: false
+  errors:
+    missing_required_param: error
+    missing_return: error
+    todo: ignore
+    parameter_assignments: warning
+    body_might_complete_normally_nullable: ignore
+
+  exclude:
+    - packages/**/assets/**/*.*
+    - packages/i18n
+    - "**.g.dart"
+    - "**.gr.dart"
+    - "**.freezed.dart"
+    - "**.config.dart"
+
+linter:
+  rules:
+    - sort_constructors_first

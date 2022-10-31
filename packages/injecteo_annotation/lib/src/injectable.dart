@@ -1,6 +1,6 @@
-/// Annotated class will generate registerFactory function
-class Factory {
-  const Factory({
+/// Annotated class will have code for injectable dependency
+class Injectable {
+  const Injectable({
     this.as,
     this.env,
   });
@@ -15,4 +15,4 @@ class Factory {
   final List<String>? env;
 }
 
-const factory = Factory();
+const injectable = Injectable();

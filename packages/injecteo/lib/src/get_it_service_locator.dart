@@ -4,10 +4,11 @@ import 'package:get_it/get_it.dart' as get_it;
 import 'package:injecteo/injecteo.dart';
 
 class GetItServiceLocator implements ServiceLocator {
+  GetItServiceLocator._();
+
   static final _getIt = get_it.GetIt.instance;
 
   static final _instance = GetItServiceLocator._();
-  GetItServiceLocator._();
 
   static ServiceLocator get instance {
     return _instance;

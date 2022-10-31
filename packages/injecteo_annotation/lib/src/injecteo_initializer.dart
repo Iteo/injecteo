@@ -1,9 +1,9 @@
 /// Marks a top-level function as an initializer function
 ///
-class DiInitialize {
-  const DiInitialize({
+class InjecteoInitializer {
+  const InjecteoInitializer({
     this.preferRelativeImports = true,
-    this.initializerName = r'$diInitialize',
+    this.initializerName = r'$injecteoInitializer',
   });
 
   /// Use relative imports
@@ -15,4 +15,4 @@ class DiInitialize {
   final String initializerName;
 }
 
-const diInitiaize = DiInitialize();
+const injecteoInitializer = InjecteoInitializer();
