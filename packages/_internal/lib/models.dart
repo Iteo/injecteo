@@ -74,7 +74,6 @@ class InjectedDependency with _$InjectedDependency {
     required ImportableType type,
     required String paramName,
     String? instanceName,
-    @Default(false) bool isFactoryParam,
     @Default(true) bool isPositional,
   }) = _InjectedDependency;
 

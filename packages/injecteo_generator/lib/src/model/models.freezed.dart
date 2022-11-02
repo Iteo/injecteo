@@ -920,7 +920,6 @@ mixin _$InjectedDependency {
   ImportableType get type => throw _privateConstructorUsedError;
   String get paramName => throw _privateConstructorUsedError;
   String? get instanceName => throw _privateConstructorUsedError;
-  bool get isFactoryParam => throw _privateConstructorUsedError;
   bool get isPositional => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -939,7 +938,6 @@ abstract class $InjectedDependencyCopyWith<$Res> {
       {ImportableType type,
       String paramName,
       String? instanceName,
-      bool isFactoryParam,
       bool isPositional});
 
   $ImportableTypeCopyWith<$Res> get type;
@@ -961,7 +959,6 @@ class _$InjectedDependencyCopyWithImpl<$Res, $Val extends InjectedDependency>
     Object? type = null,
     Object? paramName = null,
     Object? instanceName = freezed,
-    Object? isFactoryParam = null,
     Object? isPositional = null,
   }) {
     return _then(_value.copyWith(
@@ -977,10 +974,6 @@ class _$InjectedDependencyCopyWithImpl<$Res, $Val extends InjectedDependency>
           ? _value.instanceName
           : instanceName // ignore: cast_nullable_to_non_nullable
               as String?,
-      isFactoryParam: null == isFactoryParam
-          ? _value.isFactoryParam
-          : isFactoryParam // ignore: cast_nullable_to_non_nullable
-              as bool,
       isPositional: null == isPositional
           ? _value.isPositional
           : isPositional // ignore: cast_nullable_to_non_nullable
@@ -1009,7 +1002,6 @@ abstract class _$$_InjectedDependencyCopyWith<$Res>
       {ImportableType type,
       String paramName,
       String? instanceName,
-      bool isFactoryParam,
       bool isPositional});
 
   @override
@@ -1030,7 +1022,6 @@ class __$$_InjectedDependencyCopyWithImpl<$Res>
     Object? type = null,
     Object? paramName = null,
     Object? instanceName = freezed,
-    Object? isFactoryParam = null,
     Object? isPositional = null,
   }) {
     return _then(_$_InjectedDependency(
@@ -1046,10 +1037,6 @@ class __$$_InjectedDependencyCopyWithImpl<$Res>
           ? _value.instanceName
           : instanceName // ignore: cast_nullable_to_non_nullable
               as String?,
-      isFactoryParam: null == isFactoryParam
-          ? _value.isFactoryParam
-          : isFactoryParam // ignore: cast_nullable_to_non_nullable
-              as bool,
       isPositional: null == isPositional
           ? _value.isPositional
           : isPositional // ignore: cast_nullable_to_non_nullable
@@ -1065,7 +1052,6 @@ class _$_InjectedDependency extends _InjectedDependency {
       {required this.type,
       required this.paramName,
       this.instanceName,
-      this.isFactoryParam = false,
       this.isPositional = true})
       : super._();
 
@@ -1080,14 +1066,11 @@ class _$_InjectedDependency extends _InjectedDependency {
   final String? instanceName;
   @override
   @JsonKey()
-  final bool isFactoryParam;
-  @override
-  @JsonKey()
   final bool isPositional;
 
   @override
   String toString() {
-    return 'InjectedDependency(type: $type, paramName: $paramName, instanceName: $instanceName, isFactoryParam: $isFactoryParam, isPositional: $isPositional)';
+    return 'InjectedDependency(type: $type, paramName: $paramName, instanceName: $instanceName, isPositional: $isPositional)';
   }
 
   @override
@@ -1100,16 +1083,14 @@ class _$_InjectedDependency extends _InjectedDependency {
                 other.paramName == paramName) &&
             (identical(other.instanceName, instanceName) ||
                 other.instanceName == instanceName) &&
-            (identical(other.isFactoryParam, isFactoryParam) ||
-                other.isFactoryParam == isFactoryParam) &&
             (identical(other.isPositional, isPositional) ||
                 other.isPositional == isPositional));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, type, paramName, instanceName, isFactoryParam, isPositional);
+  int get hashCode =>
+      Object.hash(runtimeType, type, paramName, instanceName, isPositional);
 
   @JsonKey(ignore: true)
   @override
@@ -1131,7 +1112,6 @@ abstract class _InjectedDependency extends InjectedDependency {
       {required final ImportableType type,
       required final String paramName,
       final String? instanceName,
-      final bool isFactoryParam,
       final bool isPositional}) = _$_InjectedDependency;
   const _InjectedDependency._() : super._();
 
@@ -1144,8 +1124,6 @@ abstract class _InjectedDependency extends InjectedDependency {
   String get paramName;
   @override
   String? get instanceName;
-  @override
-  bool get isFactoryParam;
   @override
   bool get isPositional;
   @override

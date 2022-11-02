@@ -108,7 +108,6 @@ _$_InjectedDependency _$$_InjectedDependencyFromJson(
       type: ImportableType.fromJson(json['type'] as Map<String, dynamic>),
       paramName: json['paramName'] as String,
       instanceName: json['instanceName'] as String?,
-      isFactoryParam: json['isFactoryParam'] as bool? ?? false,
       isPositional: json['isPositional'] as bool? ?? true,
     );
 
@@ -118,7 +117,6 @@ Map<String, dynamic> _$$_InjectedDependencyToJson(
       'type': instance.type,
       'paramName': instance.paramName,
       'instanceName': instance.instanceName,
-      'isFactoryParam': instance.isFactoryParam,
       'isPositional': instance.isPositional,
     };
 

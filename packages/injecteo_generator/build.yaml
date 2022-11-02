@@ -1,16 +1,14 @@
 builders:
-  injecteo_dependency_builder:
+  injecteo_builder:
     import: "package:injecteo_generator/dependency_builder.dart"
-    builder_factories: ["injecteoDependencyBuilder"]
+    builder_factories: ["dependencyBuilder"]
     build_extensions: { ".dart": [".injecteo.json"] }
     auto_apply: dependents
-    required_inputs: [".freezed.dart"]
     runs_before: ["injecteo_generator|injecteo_initializer_builder"]
     build_to: cache
-
   injecteo_initializer_builder:
     import: "package:injecteo_generator/initializer_builder.dart"
-    builder_factories: ["injecteoInitializerBuilder"]
-    build_extensions: { ".dart": [".initializer.dart"] }
+    builder_factories: ["initializerBuilder"]
+    build_extensions: { ".dart": [".config.dart"] }
     auto_apply: dependents
     build_to: source

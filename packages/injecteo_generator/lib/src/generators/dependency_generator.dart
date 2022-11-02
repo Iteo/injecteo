@@ -3,14 +3,12 @@ import 'dart:convert';
 
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
-import 'package:injecteo_annotation/injecteo_annotation.dart';
 import 'package:injecteo_generator/src/model/models.dart';
 import 'package:injecteo_generator/src/resolvers/dependency_resolver.dart';
 import 'package:injecteo_generator/src/resolvers/importable_type_resolver.dart';
 import 'package:injecteo_generator/src/resolvers/importable_type_resolver_impl.dart';
+import 'package:injecteo_generator/src/resolvers/type_checker.dart';
 import 'package:source_gen/source_gen.dart';
-
-const TypeChecker _injectableChecker = TypeChecker.fromRuntime(Injectable);
 
 class InjecteoDependencyGenerator implements Generator {
   InjecteoDependencyGenerator(
@@ -18,6 +16,7 @@ class InjecteoDependencyGenerator implements Generator {
   );
 
   final BuilderOptions options;
+
   @override
   FutureOr<String?> generate(
     LibraryReader library,
@@ -25,7 +24,7 @@ class InjecteoDependencyGenerator implements Generator {
   ) async {
     final allDepsInStep = <DependencyConfig>[];
     for (final c in library.classes) {
-      if (_hasInjectable(c)) {
+      if (_hasAnnotation(c)) {
         allDepsInStep.add(
           DependencyResolver(
             getResolver(await buildStep.resolver.libraries.toList()),
@@ -41,7 +40,7 @@ class InjecteoDependencyGenerator implements Generator {
     return ImportableTypeResolverImpl(libs);
   }
 
-  bool _hasInjectable(ClassElement element) {
-    return _injectableChecker.hasAnnotationOf(element);
+  bool _hasAnnotation(ClassElement c) {
+    return injectChecker.hasAnnotationOf(c);
   }
 }

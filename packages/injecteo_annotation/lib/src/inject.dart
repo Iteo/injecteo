@@ -1,6 +1,5 @@
-/// Annotated class will have code for injectable dependency
-class Injectable {
-  const Injectable({
+class Inject {
+  const Inject({
     this.as,
     this.env,
   });
@@ -15,4 +14,4 @@ class Injectable {
   final List<String>? env;
 }
 
-const injectable = Injectable();
+const inject = Inject();

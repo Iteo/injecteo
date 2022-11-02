@@ -15,23 +15,7 @@ String toCamelCase(String s) {
   return s[0].toLowerCase() + s.substring(1);
 }
 
-void throwBoxed(String message) {
-  const pre = 'Injecteo Generator ';
-  throw "\n${pre.padRight(72, '-')}\n$message\n${''.padRight(72, '-')} \n";
-}
-
-void throwSourceError(String message) {
-  const pre = 'Injecteo Generator ';
-  throw "\n${pre.padRight(72, '-')}\n$message\n${''.padRight(72, '-')} \n";
-}
-
-void throwError(String message, {Element? element}) {
-  throw InvalidGenerationSourceError(
-    message,
-    element: element,
-  );
-}
-
+// ignore: avoid_positional_boolean_parameters
 void throwIf(bool condition, String message, {Element? element}) {
   if (condition) {
     throw InvalidGenerationSourceError(
@@ -41,19 +25,12 @@ void throwIf(bool condition, String message, {Element? element}) {
   }
 }
 
-void printBoxed(
-  String message, {
-  String header = '--------------------------',
-}) {
-  final pre = header;
-  print("$pre\n$message\n${''.padRight(72, '-')} \n");
-}
-
 extension IterableExtenstion<E> on Iterable<E> {
   E? firstOrNull(
-    bool test(
+    bool Function(
       E element,
-    ),
+    )
+        test,
   ) {
     for (final e in this) {
       if (test(e)) {

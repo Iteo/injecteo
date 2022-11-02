@@ -18,9 +18,6 @@ void _sortByDependents(
   for (final dep in unSorted) {
     if (dep.dependencies.every(
       (dependency) {
-        if (dependency.isFactoryParam) {
-          return true;
-        }
         // if dep is already in sorted return true
         if (lookupDependencyWithNoEnvOrHasAny(
               dependency,
@@ -97,8 +94,9 @@ DependencyConfig? lookupDependency(
           d.type == dependency.type &&
           d.instanceName == dependency.instanceName,
     );
-  } on StateError {}
-  return null;
+  } catch (e) {
+    return null;
+  }
 }
 
 DependencyConfig? lookupDependencyWithNoEnvOrHasAny(
@@ -117,8 +115,9 @@ DependencyConfig? lookupDependencyWithNoEnvOrHasAny(
                 (e) => envs.contains(e),
               )),
     );
-  } on StateError {}
-  return null;
+  } catch (e) {
+    return null;
+  }
 }
 
 Set<DependencyConfig> lookupPossibleDeps(
@@ -138,35 +137,28 @@ bool hasPreResolvedDependencies(Set<DependencyConfig> deps) {
   return deps.any((d) => d.isAsync && d.preResolve);
 }
 
-TypeReference nullableRefer(
-  String symbol, {
-  String? url,
-  bool nullable = false,
-}) =>
-    TypeReference(
-      (b) => b
-        ..symbol = symbol
-        ..url = url
-        ..isNullable = nullable,
-    );
-
 Reference typeRefer(
-  ImportableType type, [
+  ImportableType importableType, [
   Uri? targetFile,
-  bool withNullabilitySuffix = true,
 ]) {
   final relativeImport = targetFile == null
-      ? ImportableTypeResolver.resolveAssetImport(type.import)
-      : ImportableTypeResolver.relative(type.import, targetFile);
+      ? ImportableTypeResolver.resolveAssetImport(importableType.import)
+      : ImportableTypeResolver.relative(importableType.import, targetFile);
+
   return TypeReference(
     (reference) {
       reference
-        ..symbol = type.name
+        ..symbol = importableType.name
         ..url = relativeImport
-        ..isNullable = withNullabilitySuffix && type.isNullable;
-      if (type.typeArguments.isNotEmpty) {
+        ..isNullable = importableType.isNullable;
+      if (importableType.typeArguments.isNotEmpty) {
         reference.types.addAll(
-          type.typeArguments.map((e) => typeRefer(e, targetFile)),
+          importableType.typeArguments.map(
+            (e) => typeRefer(
+              e,
+              targetFile,
+            ),
+          ),
         );
       }
     },

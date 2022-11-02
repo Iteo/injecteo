@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:injecteo/injecteo.dart';
 import 'package:injecteo/src/typedefs.dart';
 
 abstract class ServiceLocator {
@@ -21,7 +22,7 @@ abstract class ServiceLocator {
 
   FutureOr unregister<T extends Object>({
     String? instanceName,
-    DisposableFunc<T>? dispose,
+    DisposeFunc<T>? dispose,
   });
 
   Future<void> waitForRegisterComplete();
@@ -43,27 +44,27 @@ abstract class ServiceLocator {
   ///
 
   void registerSingleton<T extends Object>(
-    T instance, {
-    String? instanceName,
-    DisposableFunc<T>? dispose,
-  });
-
-  void registerLazySingleton<T extends Object>(
     FactoryFunc<T> factoryFunc, {
-    String? instanceName,
-    DisposableFunc<T>? dispose,
-  });
-
-  void registerSingletonWithDependencies<T extends Object>(
-    FactoryFunc<T> factoryFunc, {
-    String? instanceName,
     Iterable<Type>? dependsOn,
-    DisposableFunc<T>? dispose,
+    String? instanceName,
+    DisposeFunc<T>? dispose,
   });
 
   Future<void> registerSingletonAsync<T extends Object>(
     FactoryFuncAsync<T> factoryFunc, {
     String? instanceName,
-    DisposableFunc<T>? dispose,
+    DisposeFunc<T>? dispose,
+  });
+
+  void registerLazySingleton<T extends Object>(
+    FactoryFunc<T> factoryFunc, {
+    String? instanceName,
+    DisposeFunc<T>? dispose,
+  });
+
+  Future<void> registerLazySingletonAsync<T extends Object>(
+    FactoryFuncAsync<T> factoryFunc, {
+    String? instanceName,
+    DisposeFunc<T>? dispose,
   });
 }

@@ -6,9 +6,8 @@ import 'package:injecteo/injecteo.dart';
 class GetItServiceLocator implements ServiceLocator {
   GetItServiceLocator._();
 
-  static final _getIt = get_it.GetIt.instance;
-
   static final _instance = GetItServiceLocator._();
+  final _getIt = get_it.GetIt.instance;
 
   static ServiceLocator get instance {
     return _instance;
@@ -17,18 +16,16 @@ class GetItServiceLocator implements ServiceLocator {
   @override
   T call<T extends Object>({
     String? instanceName,
-    dynamic param1,
-    dynamic param2,
   }) {
-    return _getIt(
+    return get(
       instanceName: instanceName,
-      param1: param1,
-      param2: param2,
     );
   }
 
   @override
-  T get<T extends Object>({String? instanceName}) {
+  T get<T extends Object>({
+    String? instanceName,
+  }) {
     return _getIt.get(
       instanceName: instanceName,
     );
@@ -37,13 +34,9 @@ class GetItServiceLocator implements ServiceLocator {
   @override
   Future<T> getAsync<T extends Object>({
     String? instanceName,
-    dynamic param1,
-    dynamic param2,
   }) {
     return _getIt.getAsync(
       instanceName: instanceName,
-      param1: param1,
-      param2: param2,
     );
   }
 
@@ -51,9 +44,27 @@ class GetItServiceLocator implements ServiceLocator {
   bool isRegistered<T extends Object>({
     String? instanceName,
   }) {
-    return _getIt.isRegistered(
+    return _getIt.isRegistered<T>(
       instanceName: instanceName,
     );
+  }
+
+  @override
+  FutureOr unregister<T extends Object>({
+    Object? instance,
+    String? instanceName,
+    DisposeFunc<T>? dispose,
+  }) {
+    return _getIt.unregister<T>(
+      instance: instance,
+      instanceName: instanceName,
+      disposingFunction: dispose,
+    );
+  }
+
+  @override
+  Future<void> waitForRegisterComplete() {
+    return _getIt.allReady();
   }
 
   @override
@@ -79,27 +90,15 @@ class GetItServiceLocator implements ServiceLocator {
   }
 
   @override
-  void registerLazySingleton<T extends Object>(
-    FactoryFunc<T> factoryFunc, {
-    String? instanceName,
-    bool? signalsReady,
-    DisposableFunc<T>? dispose,
-  }) {
-    return _getIt.registerLazySingleton(
-      factoryFunc,
-      instanceName: instanceName,
-      dispose: dispose,
-    );
-  }
-
-  @override
   void registerSingleton<T extends Object>(
-    T instance, {
+    FactoryFunc<T> factoryFunc, {
+    Iterable<Type>? dependsOn,
     String? instanceName,
-    DisposableFunc<T>? dispose,
+    DisposeFunc<T>? dispose,
   }) {
-    return _getIt.registerSingleton(
-      instance,
+    return _getIt.registerSingletonWithDependencies(
+      factoryFunc,
+      dependsOn: dependsOn,
       instanceName: instanceName,
       dispose: dispose,
     );
@@ -110,7 +109,7 @@ class GetItServiceLocator implements ServiceLocator {
     FactoryFuncAsync<T> factoryFunc, {
     String? instanceName,
     Iterable<Type>? dependsOn,
-    DisposableFunc<T>? dispose,
+    DisposeFunc<T>? dispose,
   }) {
     _getIt.registerSingletonAsync(
       factoryFunc,
@@ -125,35 +124,33 @@ class GetItServiceLocator implements ServiceLocator {
   }
 
   @override
-  void registerSingletonWithDependencies<T extends Object>(
+  void registerLazySingleton<T extends Object>(
     FactoryFunc<T> factoryFunc, {
     String? instanceName,
-    Iterable<Type>? dependsOn,
-    DisposableFunc<T>? dispose,
+    bool? signalsReady,
+    DisposeFunc<T>? dispose,
   }) {
-    return _getIt.registerSingletonWithDependencies(
+    return _getIt.registerLazySingleton(
       factoryFunc,
       instanceName: instanceName,
-      dependsOn: dependsOn,
       dispose: dispose,
     );
   }
 
   @override
-  FutureOr unregister<T extends Object>({
-    Object? instance,
+  Future<void> registerLazySingletonAsync<T extends Object>(
+    FactoryFuncAsync<T> factoryFunc, {
     String? instanceName,
-    DisposableFunc<T>? dispose,
-  }) {
-    return _getIt.unregister(
-      instance: instance,
+    DisposeFunc<T>? dispose,
+  }) async {
+    _getIt.registerLazySingletonAsync(
+      factoryFunc,
       instanceName: instanceName,
-      disposingFunction: dispose,
+      dispose: dispose,
     );
-  }
 
-  @override
-  Future<void> waitForRegisterComplete() {
-    return _getIt.allReady();
+    return _getIt.isReady<T>(
+      instanceName: instanceName,
+    );
   }
 }
