@@ -13,3 +13,6 @@ coverage/
 .history
 .svn/
 coverage.lcov
+
+# Ignore example folder
+example/
