@@ -63,11 +63,6 @@ class GetItServiceLocator implements ServiceLocator {
   }
 
   @override
-  Future<void> waitForRegisterComplete() {
-    return _getIt.allReady();
-  }
-
-  @override
   void registerFactory<T extends Object>(
     FactoryFunc<T> factoryFunc, {
     String? instanceName,
@@ -96,9 +91,8 @@ class GetItServiceLocator implements ServiceLocator {
     String? instanceName,
     DisposeFunc<T>? dispose,
   }) {
-    return _getIt.registerSingletonWithDependencies(
+    return _getIt.registerLazySingleton(
       factoryFunc,
-      dependsOn: dependsOn,
       instanceName: instanceName,
       dispose: dispose,
     );

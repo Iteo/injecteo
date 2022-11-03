@@ -25,8 +25,6 @@ abstract class ServiceLocator {
     DisposeFunc<T>? dispose,
   });
 
-  Future<void> waitForRegisterComplete();
-
   /// Factory
   ///
 
@@ -45,7 +43,6 @@ abstract class ServiceLocator {
 
   void registerSingleton<T extends Object>(
     FactoryFunc<T> factoryFunc, {
-    Iterable<Type>? dependsOn,
     String? instanceName,
     DisposeFunc<T>? dispose,
   });

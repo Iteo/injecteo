@@ -29,7 +29,9 @@ class DependencyResolver {
   ModuleConfig? _moduleConfig;
   DisposeFunctionConfig? _disposeFunctionConfig;
 
-  DependencyConfig resolve(ClassElement element) {
+  DependencyConfig resolve(
+    ClassElement element,
+  ) {
     _type = _typeResolver.resolveType(element.thisType);
     return _resolveActualType(element);
   }
@@ -214,5 +216,49 @@ class DependencyResolver {
       isAsync: _isAsync,
       disposeFunctionConfig: _disposeFunctionConfig,
     );
+  }
+
+  DependencyConfig resolveModuleMember(
+    ClassElement classElement,
+    ExecutableElement executableElement,
+  ) {
+    var moduleType = _typeResolver.resolveType(classElement.thisType);
+    var initializerName = executableElement.name;
+    var isAbstract = false;
+
+    final returnType = executableElement.returnType;
+    throwIf(
+      returnType.element is! ClassElement,
+      '${returnType.getDisplayString(withNullability: false)} is not a class element',
+      element: returnType.element,
+    );
+
+    Element? c;
+    var type = returnType;
+    if (executableElement.isAbstract) {
+      c = returnType.element;
+      isAbstract = true;
+      throwIf(
+        executableElement.parameters.isNotEmpty,
+        'Abstract methods can not have injectable or factory parameters',
+        element: executableElement,
+      );
+    } else {
+      if (returnType.isDartAsyncFuture) {
+        final typeArg = returnType as ParameterizedType;
+        c = typeArg.typeArguments.first.element;
+        type = typeArg.typeArguments.first;
+      } else {
+        c = returnType.element;
+      }
+    }
+    _moduleConfig = ModuleConfig(
+      isAbstract: isAbstract,
+      isMethod: executableElement is MethodElement,
+      type: moduleType,
+      initializerName: initializerName,
+    );
+    _type = _typeResolver.resolveType(type);
+    return _resolveActualType(c as ClassElement, executableElement);
   }
 }

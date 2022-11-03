@@ -110,7 +110,6 @@ class ServiceLocatorHelper {
 
   void registerSingleton<T extends Object>(
     FactoryFunc<T> factoryFunc, {
-    Iterable<Type>? dependsOn,
     String? instanceName,
     Set<String>? registerFor,
     DisposeFunc<T>? dispose,
@@ -118,7 +117,6 @@ class ServiceLocatorHelper {
     if (_canRegister(registerFor)) {
       _serviceLocator.registerSingleton(
         factoryFunc,
-        dependsOn: dependsOn,
         instanceName: instanceName,
         dispose: dispose,
       );

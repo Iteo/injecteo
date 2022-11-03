@@ -8,6 +8,7 @@ import 'package:injecteo_generator/src/resolvers/dependency_resolver.dart';
 import 'package:injecteo_generator/src/resolvers/importable_type_resolver.dart';
 import 'package:injecteo_generator/src/resolvers/importable_type_resolver_impl.dart';
 import 'package:injecteo_generator/src/resolvers/type_checker.dart';
+import 'package:injecteo_generator/src/utils/utils.dart';
 import 'package:source_gen/source_gen.dart';
 
 class InjecteoDependencyGenerator implements Generator {
@@ -23,11 +24,30 @@ class InjecteoDependencyGenerator implements Generator {
     BuildStep buildStep,
   ) async {
     final allDepsInStep = <DependencyConfig>[];
+    final libs = await buildStep.resolver.libraries.toList();
     for (final c in library.classes) {
-      if (_hasAnnotation(c)) {
+      if (moduleChecker.hasAnnotationOfExact(c)) {
+        throwIf(
+          !c.isAbstract,
+          '[${c.name}] must be an abstract class!',
+          element: c,
+        );
+        final executables = <ExecutableElement>[
+          ...c.accessors,
+          ...c.methods,
+        ];
+        for (final element in executables) {
+          if (element.isPrivate) continue;
+          allDepsInStep.add(
+            DependencyResolver(
+              getResolver(libs),
+            ).resolveModuleMember(c, element),
+          );
+        }
+      } else if (_hasAnnotation(c)) {
         allDepsInStep.add(
           DependencyResolver(
-            getResolver(await buildStep.resolver.libraries.toList()),
+            getResolver(libs),
           ).resolve(c),
         );
       }
