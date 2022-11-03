@@ -51,6 +51,7 @@ class DependencyResolver {
     DartType? abstractType;
     ExecutableElement? disposeFuncFromAnnotation;
     List<String>? inlineEnv;
+
     if (firstAnnotation != null) {
       final annotation = ConstantReader(firstAnnotation);
       if (annotation.instanceOf(lazySingletonChecker)) {
@@ -222,8 +223,8 @@ class DependencyResolver {
     ClassElement classElement,
     ExecutableElement executableElement,
   ) {
-    var moduleType = _typeResolver.resolveType(classElement.thisType);
-    var initializerName = executableElement.name;
+    final moduleType = _typeResolver.resolveType(classElement.thisType);
+    final initializerName = executableElement.name;
     var isAbstract = false;
 
     final returnType = executableElement.returnType;

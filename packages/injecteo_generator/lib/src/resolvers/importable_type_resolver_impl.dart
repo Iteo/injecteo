@@ -15,8 +15,10 @@ class ImportableTypeResolverImpl extends ImportableTypeResolver {
     }
 
     for (final lib in libs) {
-      if (!_isCoreDartType(lib) &&
-          lib.exportNamespace.definedNames.values.contains(element)) {
+      final libraryExportContainsElement = !_isCoreDartType(lib) &&
+          lib.exportNamespace.definedNames.values.contains(element);
+
+      if (libraryExportContainsElement) {
         return lib.identifier;
       }
     }
@@ -71,15 +73,17 @@ class ImportableTypeResolverImpl extends ImportableTypeResolver {
   List<ImportableType> _resolveTypeArguments(DartType typeToCheck) {
     final importableTypes = <ImportableType>[];
     if (typeToCheck is ParameterizedType) {
-      for (final DartType type in typeToCheck.typeArguments) {
+      for (final type in typeToCheck.typeArguments) {
         if (type.element is TypeParameterElement) {
           importableTypes.add(const ImportableType(name: 'dynamic'));
         } else {
+          final name = type.element?.name ??
+              type.getDisplayString(withNullability: false);
+          final import = resolveImport(type.element);
           importableTypes.add(
             ImportableType(
-              name: type.element?.name ??
-                  type.getDisplayString(withNullability: false),
-              import: resolveImport(type.element),
+              name: name,
+              import: import,
               isNullable: type.nullabilitySuffix == NullabilitySuffix.question,
               typeArguments: _resolveTypeArguments(type),
             ),

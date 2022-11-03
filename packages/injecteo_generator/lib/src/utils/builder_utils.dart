@@ -1,6 +1,6 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:injecteo_generator/src/model/models.dart';
-import 'package:injecteo_generator/src/resolvers/importable_type_resolver.dart';
+import 'package:injecteo_generator/src/resolvers/import_path_resolver.dart';
 
 Set<DependencyConfig> sortDependencies(List<DependencyConfig> deps) {
   // sort dependencies alphabetically
@@ -141,15 +141,15 @@ Reference typeRefer(
   ImportableType importableType, [
   Uri? targetFile,
 ]) {
-  final relativeImport = targetFile == null
-      ? ImportableTypeResolver.resolveAssetImport(importableType.import)
-      : ImportableTypeResolver.relative(importableType.import, targetFile);
+  final relativeImportUrl = targetFile == null
+      ? ImportPathResolver.resolveAssetImport(importableType.import)
+      : ImportPathResolver.relative(importableType.import, targetFile);
 
   return TypeReference(
     (reference) {
       reference
         ..symbol = importableType.name
-        ..url = relativeImport
+        ..url = relativeImportUrl
         ..isNullable = importableType.isNullable;
       if (importableType.typeArguments.isNotEmpty) {
         reference.types.addAll(
