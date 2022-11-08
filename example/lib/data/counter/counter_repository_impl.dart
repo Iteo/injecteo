@@ -1,16 +1,23 @@
+import 'package:di_example/core/logger/logger.dart';
 import 'package:di_example/data/counter/counter_data_source.dart';
 import 'package:di_example/domain/counter/counter_repository.dart';
 import 'package:injecteo_annotation/injecteo_annotation.dart';
 
 @Singleton(as: CounterRepository)
 class CounterRepositoryImpl implements CounterRepository<int> {
-  CounterRepositoryImpl(this._counterDataSource);
+  CounterRepositoryImpl(
+    this._counterDataSource,
+    this._logger,
+  );
 
   final CounterDataSource _counterDataSource;
+  final Logger _logger;
 
   @override
   Future<int> getValue() async {
-    return _counterDataSource.getValue();
+    final value = await _counterDataSource.getValue();
+    _logger.d('Current value: $value');
+    return value;
   }
 
   @override

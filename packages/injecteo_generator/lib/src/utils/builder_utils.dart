@@ -1,5 +1,7 @@
 import 'package:code_builder/code_builder.dart';
-import 'package:injecteo_generator/src/model/models.dart';
+import 'package:injecteo_generator/src/model/dependency_config.dart';
+import 'package:injecteo_generator/src/model/importable_type.dart';
+import 'package:injecteo_generator/src/model/injected_dependency.dart';
 import 'package:injecteo_generator/src/resolvers/import_path_resolver.dart';
 
 Set<DependencyConfig> sortDependencies(List<DependencyConfig> deps) {

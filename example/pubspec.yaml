@@ -23,6 +23,7 @@ dependencies:
   hooked_bloc: ^1.2.1
   flutter_hooks: ^0.18.5+1
   shared_preferences: ^2.0.15
+  fimber: ^0.6.6
 
 dev_dependencies:
   flutter_test:

@@ -10,12 +10,8 @@ analyzer:
     body_might_complete_normally_nullable: ignore
 
   exclude:
-    - packages/**/assets/**/*.*
-    - packages/i18n
-    - "**.g.dart"
-    - "**.gr.dart"
-    - "**.freezed.dart"
-    - "**.config.dart"
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
 
 linter:
   rules:

@@ -1,5 +1,9 @@
 import 'package:code_builder/code_builder.dart';
-import 'package:injecteo_generator/src/model/models.dart';
+import 'package:injecteo_generator/src/model/dependency_config.dart';
+import 'package:injecteo_generator/src/model/dependency_type.dart';
+import 'package:injecteo_generator/src/model/dispose_function_config.dart';
+import 'package:injecteo_generator/src/model/injected_dependency.dart';
+import 'package:injecteo_generator/src/model/module_config.dart';
 import 'package:injecteo_generator/src/utils/builder_utils.dart';
 import 'package:injecteo_generator/src/utils/utils.dart';
 import 'package:source_gen/source_gen.dart';
@@ -38,15 +42,13 @@ class LibraryGenerator {
   final Uri? _targetFile;
 
   Library generate() {
-    final environments = <String>{};
-    final moduleConfigs = <ModuleConfig>{};
+    final environments =
+        _dependencies.expand((element) => element.environments).toSet();
 
-    for (final dep in _dependencies) {
-      environments.addAll(dep.environments);
-      if (dep.moduleConfig != null) {
-        moduleConfigs.add(dep.moduleConfig!);
-      }
-    }
+    final moduleConfigs = _dependencies
+        .where((element) => element.moduleConfig != null)
+        .map((x) => x.moduleConfig!)
+        .toSet();
 
     // if true use an awaited initializer
     final hasPreResolvedDeps = hasPreResolvedDependencies(_dependencies);
@@ -135,9 +137,7 @@ class LibraryGenerator {
                     .statement,
               ),
               ..._dependencies.map(
-                (dep) {
-                  return buildRegisterFunction(dep);
-                },
+                (dep) => buildRegisterFunction(dep),
               ),
               serviceLocatorInstanceReference.returned.statement,
             ],

@@ -1,6 +1,11 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
-import 'package:injecteo_generator/src/model/models.dart';
+import 'package:injecteo_generator/src/model/dependency_config.dart';
+import 'package:injecteo_generator/src/model/dependency_type.dart';
+import 'package:injecteo_generator/src/model/dispose_function_config.dart';
+import 'package:injecteo_generator/src/model/importable_type.dart';
+import 'package:injecteo_generator/src/model/injected_dependency.dart';
+import 'package:injecteo_generator/src/model/module_config.dart';
 import 'package:injecteo_generator/src/resolvers/importable_type_resolver.dart';
 import 'package:injecteo_generator/src/resolvers/type_checker.dart';
 import 'package:injecteo_generator/src/utils/utils.dart';
@@ -219,6 +224,15 @@ class DependencyResolver {
     );
   }
 
+  DependencyConfig resolveInjectionModuleMember(
+    ClassElement classElement,
+  ) {
+    final moduleType = _typeResolver.resolveType(classElement.thisType);
+    var isAbstract = false;
+
+    return _resolveActualType(classElement);
+  }
+
   DependencyConfig resolveModuleMember(
     ClassElement classElement,
     ExecutableElement executableElement,
@@ -228,6 +242,7 @@ class DependencyResolver {
     var isAbstract = false;
 
     final returnType = executableElement.returnType;
+
     throwIf(
       returnType.element is! ClassElement,
       '${returnType.getDisplayString(withNullability: false)} is not a class element',

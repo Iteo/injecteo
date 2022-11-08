@@ -7,7 +7,7 @@ import 'package:dart_style/dart_style.dart';
 import 'package:glob/glob.dart';
 import 'package:injecteo_annotation/injecteo_annotation.dart';
 import 'package:injecteo_generator/src/generators/library_generator.dart';
-import 'package:injecteo_generator/src/model/models.dart';
+import 'package:injecteo_generator/src/model/dependency_config.dart';
 import 'package:source_gen/source_gen.dart';
 
 class InjecteoInitializerGenerator
@@ -21,13 +21,12 @@ class InjecteoInitializerGenerator
     final preferRelativeImports =
         annotation.read("preferRelativeImports").boolValue;
     final targetFile = preferRelativeImports ? element.source?.uri : null;
-
     final initializerName = annotation.read('initializerName').stringValue;
 
-    final dependencyConfigFilesPattern = Glob("**.injecteo.json");
-
+    final pattern = Glob("**.injecteo.json");
     final jsonData = <Map<String, dynamic>>[];
-    await for (final id in buildStep.findAssets(dependencyConfigFilesPattern)) {
+
+    await for (final id in buildStep.findAssets(pattern)) {
       final json = jsonDecode(await buildStep.readAsString(id));
       jsonData.addAll([...json]);
     }

@@ -5,6 +5,7 @@ export 'src/environment.dart';
 export 'src/factory_method.dart';
 export 'src/inject.dart';
 export 'src/injecteo_initializer.dart';
+export 'src/injection_module.dart';
 export 'src/lazy_singleton.dart';
 export 'src/module.dart';
 export 'src/named.dart';

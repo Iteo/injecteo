@@ -1,13 +1,7 @@
-import 'package:injecteo/injecteo.dart';
-
 class InjectionModule {
   const InjectionModule({
-    this.serviceLocator,
-    this.env,
+    required this.name,
   });
 
-  final ServiceLocator? serviceLocator;
-  final String? env;
+  final String name;
 }
-
-const injectionModule = InjectionModule();
