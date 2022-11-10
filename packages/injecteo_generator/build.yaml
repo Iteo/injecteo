@@ -4,8 +4,8 @@ builders:
     builder_factories: ["dependencyGeneratorBuilder"]
     build_extensions: { ".dart": [".injecteo.json"] }
     auto_apply: dependents
-    runs_before: [":injecteo_builder"]
     build_to: cache
+    runs_before: [":injecteo_builder"]
   injecteo_builder:
     import: "package:injecteo_generator/builder.dart"
     builder_factories: ["initializerBuilder"]

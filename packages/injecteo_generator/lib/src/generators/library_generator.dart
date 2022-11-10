@@ -1,31 +1,11 @@
 import 'package:code_builder/code_builder.dart';
-import 'package:injecteo_generator/src/model/dependency_config.dart';
-import 'package:injecteo_generator/src/model/dependency_type.dart';
-import 'package:injecteo_generator/src/model/dispose_function_config.dart';
-import 'package:injecteo_generator/src/model/injected_dependency.dart';
-import 'package:injecteo_generator/src/model/module_config.dart';
-import 'package:injecteo_generator/src/utils/builder_utils.dart';
-import 'package:injecteo_generator/src/utils/utils.dart';
+import 'package:injecteo_models/injecteo_models.dart';
 import 'package:source_gen/source_gen.dart';
 
-const _injecteoImport = 'package:injecteo/injecteo.dart';
-
-const _slTypeReference = Reference('ServiceLocator', _injecteoImport);
-const _slInstanceName = 'serviceLocator';
-
-const _slHelperTypeReference =
-    Reference('ServiceLocatorHelper', _injecteoImport);
-const _slHelperInstanceName = 'serviceLocatorHelper';
-const _slHelperInstanceReference = Reference(_slHelperInstanceName);
-
-const _registerFactoryFuncName = 'registerFactory';
-const _registerFactoryAsyncFuncName = 'registerFactoryAsync';
-
-const _registerSingletonFuncName = 'registerSingleton';
-const _registerSingletonAsyncFuncName = 'registerSingletonAsync';
-
-const _registerLazySingletonFuncName = 'registerLazySingleton';
-const _registerLazySingletonAsyncFuncName = 'registerLazySingletonAsync';
+import '../utils/dependency_utils.dart';
+import '../utils/type_refer.dart';
+import '../utils/utils.dart';
+import 'references.dart';
 
 class LibraryGenerator {
   LibraryGenerator({
@@ -34,37 +14,86 @@ class LibraryGenerator {
     Uri? targetFile,
   })  : _initializerName = initializerName,
         _targetFile = targetFile {
-    _dependencies = sortDependencies(dependencies);
+    _sortedDependencies = sortDependencies(dependencies);
   }
 
-  late final Set<DependencyConfig> _dependencies;
+  late final Set<DependencyConfig> _sortedDependencies;
   final String _initializerName;
   final Uri? _targetFile;
 
   Library generate() {
     final environments =
-        _dependencies.expand((element) => element.environments).toSet();
+        _sortedDependencies.expand((element) => element.environments).toSet();
 
-    final moduleConfigs = _dependencies
-        .where((element) => element.moduleConfig != null)
-        .map((x) => x.moduleConfig!)
+    final injectionModuleConfigs = _sortedDependencies
+        .where((element) => element.isFromInjectionModule)
+        .map((e) => e.injectionModuleConfig!)
         .toSet();
 
-    // if true use an awaited initializer
-    final hasPreResolvedDeps = hasPreResolvedDependencies(_dependencies);
+    final moduleConfigs = _getModuleConfigs(_sortedDependencies);
 
-    final ignoreForFileComments = [
-      '// ignore_for_file: unnecessary_lambdas',
-      '// ignore_for_file: lines_longer_than_80_chars'
-    ];
+    final environmentFields = environments.map(
+      (env) => Field(
+        (b) => b
+          ..name = '_$env'
+          ..type = refer('String')
+          ..assignment = literalString(env).code
+          ..modifier = FieldModifier.constant,
+      ),
+    );
 
-    final serviceLocatorInstanceReference = refer(_slInstanceName);
+    final injectionModuleClasses = injectionModuleConfigs.map(
+      (injectionModuleConfig) => _buildInjectionModuleClass(
+        injectionModuleConfig: injectionModuleConfig,
+        injectionModuleDependencies: _sortedDependencies
+            .where((e) => e.injectionModuleConfig == injectionModuleConfig)
+            .toSet(),
+        isAsync: true,
+      ),
+    );
+
+    final moduleClasses = moduleConfigs.map(
+      (moduleConfig) => _buildModuleClass(
+        module: moduleConfig,
+        moduleDependencies:
+            _sortedDependencies.where((e) => e.moduleConfig == moduleConfig),
+      ),
+    );
+
+    final initializer = _buildInitializer(moduleConfigs: moduleConfigs);
+
+    return Library(
+      (b) => b
+        ..body.addAll(
+          [
+            ...environmentFields,
+            initializer,
+            ...injectionModuleClasses,
+            ...moduleClasses
+          ],
+        ),
+    );
+  }
+
+  Set<ModuleConfig> _getModuleConfigs(Set<DependencyConfig> dependencyConfigs) {
+    return dependencyConfigs
+        .where((element) => element.isFromModule)
+        .map((x) => x.moduleConfig!)
+        .toSet();
+  }
+
+  Spec _buildInitializer({
+    required Iterable<ModuleConfig> moduleConfigs,
+  }) {
+    final hasPreResolvedDeps = hasPreResolvedDependencies(_sortedDependencies);
 
     final intiMethod = Method(
       (b) => b
         ..docs.addAll(
           [
-            ...ignoreForFileComments,
+            '// ignore_for_file: unnecessary_lambdas',
+            '// ignore_for_file: lines_longer_than_80_chars',
+            '/// ',
             '/// initializes the registration of provided dependencies'
           ],
         )
@@ -72,16 +101,16 @@ class LibraryGenerator {
             ? TypeReference(
                 (b) => b
                   ..symbol = 'Future'
-                  ..types.add(_slTypeReference),
+                  ..types.add(slTypeReference),
               )
-            : _slTypeReference
+            : slTypeReference
         ..name = _initializerName
         ..modifier = hasPreResolvedDeps ? MethodModifier.async : null
         ..requiredParameters.addAll([
           Parameter(
             (b) => b
-              ..name = _slInstanceName
-              ..type = _slTypeReference,
+              ..name = slInstanceName
+              ..type = slTypeReference,
           )
         ])
         ..optionalParameters.addAll(
@@ -103,78 +132,26 @@ class LibraryGenerator {
                 ..type = TypeReference(
                   (b) => b
                     ..symbol = 'EnvironmentFilter'
-                    ..url = _injecteoImport
+                    ..url = injecteoImport
                     ..isNullable = true,
                 ),
             )
           ],
         )
-        ..body = Block(
-          (b) => b.statements.addAll(
-            [
-              _slHelperTypeReference
-                  .newInstance(
-                    [
-                      serviceLocatorInstanceReference,
-                      refer('environment'),
-                      refer('environmentFilter'),
-                    ],
-                  )
-                  .assignFinal(_slHelperInstanceName)
-                  .statement,
-              ...moduleConfigs.map(
-                (moduleConfig) => refer('_\$${moduleConfig.type.name}')
-                    .call(
-                      [
-                        if (moduleHasOverrides(
-                          _dependencies
-                              .where((e) => e.moduleConfig == moduleConfig),
-                        ))
-                          serviceLocatorInstanceReference
-                      ],
-                    )
-                    .assignFinal(toCamelCase(moduleConfig.type.name))
-                    .statement,
-              ),
-              ..._dependencies.map(
-                (dep) => buildRegisterFunction(dep),
-              ),
-              serviceLocatorInstanceReference.returned.statement,
-            ],
-          ),
-        ),
+        //TODO: iterate over modules, register them. Generate missing dependencies (without module)
+        // ..body = _buildRegisterFunctions(),
+        ..body = Code(''),
     );
 
-    return Library(
-      (b) => b
-        ..body.addAll(
-          [
-            ...environments.map(
-              (env) => Field(
-                (b) => b
-                  ..name = '_$env'
-                  ..type = refer('String')
-                  ..assignment = literalString(env).code
-                  ..modifier = FieldModifier.constant,
-              ),
-            ),
-            intiMethod,
-            ...moduleConfigs.map(
-              (moduleConfig) => _buildModule(
-                moduleConfig,
-                _dependencies.where((e) => e.moduleConfig == moduleConfig),
-              ),
-            )
-          ],
-        ),
-    );
+    return intiMethod;
   }
 
-  Class _buildModule(
-    ModuleConfig module,
-    Iterable<DependencyConfig> deps,
-  ) {
-    final abstractDeps = deps.where((d) => d.moduleConfig!.isAbstract);
+  Class _buildModuleClass({
+    required ModuleConfig module,
+    required Iterable<DependencyConfig> moduleDependencies,
+  }) {
+    final abstractDeps =
+        moduleDependencies.where((d) => d.moduleConfig!.isAbstract);
 
     return Class(
       (c) {
@@ -188,8 +165,8 @@ class LibraryGenerator {
           c.fields.add(
             Field(
               (b) => b
-                ..name = _slInstanceName
-                ..type = _slTypeReference
+                ..name = slInstanceName
+                ..type = slTypeReference
                 ..modifier = FieldModifier.final$,
             ),
           );
@@ -199,7 +176,7 @@ class LibraryGenerator {
                 ..requiredParameters.add(
                   Parameter(
                     (b) => b
-                      ..name = _slInstanceName
+                      ..name = slInstanceName
                       ..toThis = true,
                   ),
                 ),
@@ -218,9 +195,9 @@ class LibraryGenerator {
                 )
                 ..type = dep.moduleConfig!.isMethod ? null : MethodType.getter
                 ..body = _buildInstance(
-                  dep,
-                  getAsyncMethodName: '$_slInstanceName.getAsync',
-                  getMethodName: '$_slInstanceName.get',
+                  dependency: dep,
+                  isAsync: false,
+                  instanceForModule: true,
                 ).code,
             ),
           ),
@@ -229,150 +206,271 @@ class LibraryGenerator {
     );
   }
 
-  Code buildRegisterFunction(DependencyConfig dep) {
-    final Map<String, Reference> factoryParams = {};
-    final hasAsyncDep = hasAsyncDependency(dep, _dependencies);
-    final registerFuncName = _getRegisterFunction(dep);
+  Class _buildInjectionModuleClass({
+    required InjectionModuleConfig injectionModuleConfig,
+    required Set<DependencyConfig> injectionModuleDependencies,
+    required bool isAsync,
+  }) {
+    final c = Class(
+      (b) {
+        b
+          ..name = '_\$${injectionModuleConfig.moduleName}'
+          ..extend = baseInjectionModuleTypeReference;
 
-    final instanceBuilder =
-        dep.isFromModule ? _buildInstanceForModule(dep) : _buildInstance(dep);
+        b.methods.addAll(
+          [
+            Method(
+              (b) => b
+                ..name = registerDependenciesFuncName
+                ..annotations.add(refer('override'))
+                ..returns = isAsync
+                    ? TypeReference(
+                        (b) => b
+                          ..symbol = 'Future'
+                          ..types.add(refer('void')),
+                      )
+                    : refer('void')
+                ..modifier = isAsync ? MethodModifier.async : null
+                ..requiredParameters.addAll(
+                  [
+                    Parameter(
+                      (b) => b
+                        ..name = slInstanceName
+                        ..type = slTypeReference,
+                    )
+                  ],
+                )
+                ..optionalParameters.addAll(
+                  [
+                    Parameter(
+                      (b) => b
+                        ..named = true
+                        ..name = 'environment'
+                        ..type = TypeReference(
+                          (b) => b
+                            ..symbol = 'String'
+                            ..isNullable = true,
+                        ),
+                    ),
+                    Parameter(
+                      (b) => b
+                        ..named = true
+                        ..name = 'environmentFilter'
+                        ..type = TypeReference(
+                          (b) => b
+                            ..symbol = 'EnvironmentFilter'
+                            ..url = injecteoImport
+                            ..isNullable = true,
+                        ),
+                    )
+                  ],
+                )
+                ..body = _buildRegisterFunctions(
+                  dependencyConfigs: injectionModuleDependencies,
+                ),
+            ),
+          ],
+        );
+      },
+    );
+
+    return c;
+  }
+
+  Block _buildRegisterFunctions({
+    required Set<DependencyConfig> dependencyConfigs,
+  }) {
+    final moduleConfigs = _getModuleConfigs(dependencyConfigs);
+
+    final environmentFilterCode = slHelperTypeReference
+        .newInstance(
+          [
+            refer(slInstanceName),
+            // refer('environment'),
+            // refer('environmentFilter'),
+          ],
+        )
+        .assignFinal(slHelperInstanceName)
+        .statement;
+
+    final moduleAssignmentsCode = moduleConfigs.map(
+      (moduleConfig) {
+        final moduleCode = refer('_\$${moduleConfig.type.name}')
+            .call(
+              [
+                if (moduleHasOverrides(
+                  dependencyConfigs.where(
+                      (dependency) => dependency.moduleConfig == moduleConfig),
+                ))
+                  refer(slInstanceName)
+              ],
+            )
+            .assignFinal(toCamelCase(moduleConfig.type.name))
+            .statement;
+        return moduleCode;
+      },
+    );
+
+    final registerFunctionsCode = dependencyConfigs.map(
+      (dep) => _buildRegisterFunction(
+        dependency: dep,
+        isAsync: hasAsyncDependency(dep, dependencyConfigs),
+      ),
+    );
+
+    return Block(
+      (b) => b.statements.addAll(
+        [
+          environmentFilterCode,
+          ...moduleAssignmentsCode,
+          ...registerFunctionsCode,
+        ],
+      ),
+    );
+  }
+
+  Code _buildRegisterFunction({
+    required DependencyConfig dependency,
+    required bool isAsync,
+  }) {
+    final registerFuncName = _getRegisterFunctionName(
+      dependency: dependency,
+      hasAsyncDependencies: isAsync,
+    );
+
+    final body = _buildInstance(
+      dependency: dependency,
+      isAsync: isAsync,
+      instanceForModule: dependency.isFromModule,
+    ).code;
 
     final registerExpression =
-        _slHelperInstanceReference.property(registerFuncName).call(
+        slHelperInstanceReference.property(registerFuncName).call(
       [
         Method(
           (b) => b
             ..lambda = true
-            ..modifier = hasAsyncDep ? MethodModifier.async : null
-            ..requiredParameters.addAll(
-              factoryParams.keys.map(
-                (name) => Parameter((b) => b.name = name),
-              ),
-            )
-            ..body = instanceBuilder.code,
+            ..modifier = isAsync ? MethodModifier.async : null
+            ..body = body,
         ).closure
       ],
       {
-        if (dep.instanceName != null)
-          'instanceName': literalString(dep.instanceName!),
-        if (dep.environments.isNotEmpty == true)
+        if (dependency.instanceName != null)
+          'instanceName': literalString(dependency.instanceName!),
+        if (dependency.environments.isNotEmpty == true)
           'registerFor': literalSet(
-            dep.environments.map((e) => refer('_$e')),
+            dependency.environments.map((e) => refer('_$e')),
           ),
-        if (dep.preResolve == true) 'preResolve': literalBool(true),
-        if (dep.disposeFunctionConfig != null)
-          'dispose': _getDisposeFunctionAssignment(dep.disposeFunctionConfig!),
-        if (dep.dependsOn.isNotEmpty)
+        if (dependency.preResolve == true) 'preResolve': literalBool(true),
+        if (dependency.disposeFunctionConfig != null)
+          'dispose':
+              _getDisposeFunctionAssignment(dependency.disposeFunctionConfig!),
+        if (dependency.dependsOn.isNotEmpty)
           'dependsOn': literalList(
-            dep.dependsOn.map(
+            dependency.dependsOn.map(
               (e) => typeRefer(
                 e,
                 _targetFile,
               ),
             ),
           ),
-        if (dep.signalsReady != null)
-          'signalsReady': literalBool(dep.signalsReady!),
+        if (dependency.signalsReady != null)
+          'signalsReady': literalBool(dependency.signalsReady!),
       },
       [
-        typeRefer(dep.type, _targetFile),
-        ...factoryParams.values.map((p) => p.type)
+        typeRefer(dependency.type, _targetFile),
       ],
     );
 
-    return dep.preResolve
+    return dependency.preResolve
         ? registerExpression.awaited.statement
         : registerExpression.statement;
   }
 
-  String _getRegisterFunction(DependencyConfig dep) {
-    final hasAsyncDep = hasAsyncDependency(dep, _dependencies);
-    final isOrHasAsyncDep = dep.isAsync || hasAsyncDep;
+  String _getRegisterFunctionName({
+    required DependencyConfig dependency,
+    required bool hasAsyncDependencies,
+  }) {
+    final isOrHasAsyncDep = dependency.isAsync || hasAsyncDependencies;
 
-    if (dep.dependencyType == DependencyType.factory) {
+    if (dependency.dependencyType == DependencyType.factory) {
       return isOrHasAsyncDep
-          ? _registerFactoryAsyncFuncName
-          : _registerFactoryFuncName;
-    } else if (dep.dependencyType == DependencyType.lazySingleton) {
+          ? registerFactoryAsyncFuncName
+          : registerFactoryFuncName;
+    } else if (dependency.dependencyType == DependencyType.lazySingleton) {
       return isOrHasAsyncDep
-          ? _registerLazySingletonAsyncFuncName
-          : _registerLazySingletonFuncName;
-    } else if (dep.dependencyType == DependencyType.singleton) {
+          ? registerLazySingletonAsyncFuncName
+          : registerLazySingletonFuncName;
+    } else if (dependency.dependencyType == DependencyType.singleton) {
       if (isOrHasAsyncDep) {
-        return _registerSingletonAsyncFuncName;
+        return registerSingletonAsyncFuncName;
       } else {
-        return _registerSingletonFuncName;
+        return registerSingletonFuncName;
       }
     }
 
     throw InvalidGenerationSourceError(
-        'Injecteo type is not supported. Check if function name responsible for generation ${dep.dependencyType} is set');
+      'Injecteo type is not supported. Check if function name responsible for generation ${dependency.dependencyType} is set',
+    );
   }
 
-  Expression _buildInstance(
-    DependencyConfig dep, {
-    String? getAsyncMethodName,
-    String? getMethodName,
+  Expression _buildInstance({
+    required DependencyConfig dependency,
+    required bool isAsync,
+    required bool instanceForModule,
   }) {
-    final positionalParams = dep.positionalDependencies.map(
-      (dependency) => _buildParamAssignment(
-        dependency,
-        getAsyncReferName: getAsyncMethodName,
-        getReferName: getMethodName,
+    final positionalParams = dependency.positionalDependencies.map(
+      (injectedDependency) => _buildParamAssignment(
+        injectedDependency: injectedDependency,
+        isAsync: isAsync,
       ),
     );
 
     final namedParams = Map.fromEntries(
-      dep.namedDependencies.map(
-        (dependecy) => MapEntry(
-          dependecy.paramName,
+      dependency.namedDependencies.map(
+        (injectedDependency) => MapEntry(
+          injectedDependency.paramName,
           _buildParamAssignment(
-            dependecy,
-            getAsyncReferName: getAsyncMethodName,
-            getReferName: getMethodName,
+            injectedDependency: injectedDependency,
+            isAsync: isAsync,
           ),
         ),
       ),
     );
 
+    if (instanceForModule) {
+      final module = dependency.moduleConfig!;
+      if (!module.isMethod) {
+        return refer(
+          toCamelCase(module.type.name),
+        ).property(module.initializerName);
+      }
+
+      return refer(toCamelCase(module.type.name)).newInstanceNamed(
+        module.initializerName,
+        positionalParams,
+        namedParams,
+      );
+    }
+
     final ref = typeRefer(
-      dep.typeImplementation,
+      dependency.typeImplementation,
       _targetFile,
     );
 
-    if (dep.constructorName?.isNotEmpty == true) {
+    final isNamedInstance = dependency.constructorName?.isNotEmpty == true;
+    if (isNamedInstance) {
       return ref.newInstanceNamed(
-        dep.constructorName!,
+        dependency.constructorName!,
         positionalParams,
         namedParams,
       );
     } else {
-      return ref.newInstance(positionalParams, namedParams);
+      return ref.newInstance(
+        positionalParams,
+        namedParams,
+      );
     }
-  }
-
-  Expression _buildInstanceForModule(DependencyConfig dep) {
-    final module = dep.moduleConfig!;
-    if (!module.isMethod) {
-      return refer(
-        toCamelCase(module.type.name),
-      ).property(module.initializerName);
-    }
-
-    return refer(toCamelCase(module.type.name)).newInstanceNamed(
-      module.initializerName,
-      dep.positionalDependencies.map(
-        (dependecy) => _buildParamAssignment(dependecy),
-      ),
-      Map.fromEntries(
-        dep.namedDependencies.map(
-          (dependecy) => MapEntry(
-            dependecy.paramName,
-            _buildParamAssignment(dependecy),
-          ),
-        ),
-      ),
-    );
   }
 
   Expression _getDisposeFunctionAssignment(
@@ -393,23 +491,21 @@ class LibraryGenerator {
     }
   }
 
-  Expression _buildParamAssignment(
-    InjectedDependency dependency, {
-    String? getAsyncReferName,
-    String? getReferName,
+  Expression _buildParamAssignment({
+    required InjectedDependency injectedDependency,
+    required bool isAsync,
   }) {
-    getAsyncReferName ??= '$_slInstanceName.getAsync';
-    getReferName ??= '$_slInstanceName.get';
-    final isAsync = isAsyncOrHasAsyncDependency(dependency, _dependencies);
-    final expression = refer(isAsync ? getAsyncReferName : getReferName).call(
+    final expression =
+        refer(isAsync ? getDependencyAsyncMethodName : getDependencyMethodName)
+            .call(
       [],
       {
-        if (dependency.instanceName != null)
-          'instanceName': literalString(dependency.instanceName!),
+        if (injectedDependency.instanceName != null)
+          'instanceName': literalString(injectedDependency.instanceName!),
       },
       [
         typeRefer(
-          dependency.type,
+          injectedDependency.type,
           _targetFile,
         ),
       ],

@@ -13,3 +13,5 @@ const TypeChecker factoryMethodChecker = TypeChecker.fromRuntime(FactoryMethod);
 const TypeChecker preResolveChecker = TypeChecker.fromRuntime(PreResolve);
 
 const TypeChecker moduleChecker = TypeChecker.fromRuntime(Module);
+const TypeChecker injectionModuleChecker =
+    TypeChecker.fromRuntime(InjectionModule);

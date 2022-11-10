@@ -1,7 +1,8 @@
 import 'package:build/build.dart';
-import 'package:injecteo_generator/src/generators/dependency_generator.dart';
-import 'package:injecteo_generator/src/generators/initializer_generator.dart';
 import 'package:source_gen/source_gen.dart';
+
+import 'src/generators/dependency_generator.dart';
+import 'src/generators/initializer_generator.dart';
 
 Builder dependencyGeneratorBuilder(BuilderOptions options) {
   return LibraryBuilder(

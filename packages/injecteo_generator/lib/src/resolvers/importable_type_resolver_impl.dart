@@ -1,8 +1,9 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
-import 'package:injecteo_generator/src/model/importable_type.dart';
-import 'package:injecteo_generator/src/resolvers/importable_type_resolver.dart';
+import 'package:injecteo_models/injecteo_models.dart';
+
+import 'importable_type_resolver.dart';
 
 class ImportableTypeResolverImpl extends ImportableTypeResolver {
   ImportableTypeResolverImpl(this.libs);

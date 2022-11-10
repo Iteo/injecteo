@@ -21,7 +21,6 @@ InjectionModuleConfig _$InjectionModuleConfigFromJson(
 
 /// @nodoc
 mixin _$InjectionModuleConfig {
-  ImportableType get type => throw _privateConstructorUsedError;
   String get moduleName => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -36,9 +35,7 @@ abstract class $InjectionModuleConfigCopyWith<$Res> {
           $Res Function(InjectionModuleConfig) then) =
       _$InjectionModuleConfigCopyWithImpl<$Res, InjectionModuleConfig>;
   @useResult
-  $Res call({ImportableType type, String moduleName});
-
-  $ImportableTypeCopyWith<$Res> get type;
+  $Res call({String moduleName});
 }
 
 /// @nodoc
@@ -55,27 +52,14 @@ class _$InjectionModuleConfigCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? type = null,
     Object? moduleName = null,
   }) {
     return _then(_value.copyWith(
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as ImportableType,
       moduleName: null == moduleName
           ? _value.moduleName
           : moduleName // ignore: cast_nullable_to_non_nullable
               as String,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $ImportableTypeCopyWith<$Res> get type {
-    return $ImportableTypeCopyWith<$Res>(_value.type, (value) {
-      return _then(_value.copyWith(type: value) as $Val);
-    });
   }
 }
 
@@ -87,10 +71,7 @@ abstract class _$$_InjectionModuleConfigCopyWith<$Res>
       __$$_InjectionModuleConfigCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({ImportableType type, String moduleName});
-
-  @override
-  $ImportableTypeCopyWith<$Res> get type;
+  $Res call({String moduleName});
 }
 
 /// @nodoc
@@ -104,14 +85,9 @@ class __$$_InjectionModuleConfigCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? type = null,
     Object? moduleName = null,
   }) {
     return _then(_$_InjectionModuleConfig(
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as ImportableType,
       moduleName: null == moduleName
           ? _value.moduleName
           : moduleName // ignore: cast_nullable_to_non_nullable
@@ -123,20 +99,17 @@ class __$$_InjectionModuleConfigCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_InjectionModuleConfig implements _InjectionModuleConfig {
-  const _$_InjectionModuleConfig(
-      {required this.type, required this.moduleName});
+  const _$_InjectionModuleConfig({required this.moduleName});
 
   factory _$_InjectionModuleConfig.fromJson(Map<String, dynamic> json) =>
       _$$_InjectionModuleConfigFromJson(json);
 
   @override
-  final ImportableType type;
-  @override
   final String moduleName;
 
   @override
   String toString() {
-    return 'InjectionModuleConfig(type: $type, moduleName: $moduleName)';
+    return 'InjectionModuleConfig(moduleName: $moduleName)';
   }
 
   @override
@@ -144,14 +117,13 @@ class _$_InjectionModuleConfig implements _InjectionModuleConfig {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_InjectionModuleConfig &&
-            (identical(other.type, type) || other.type == type) &&
             (identical(other.moduleName, moduleName) ||
                 other.moduleName == moduleName));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, type, moduleName);
+  int get hashCode => Object.hash(runtimeType, moduleName);
 
   @JsonKey(ignore: true)
   @override
@@ -169,15 +141,12 @@ class _$_InjectionModuleConfig implements _InjectionModuleConfig {
 }
 
 abstract class _InjectionModuleConfig implements InjectionModuleConfig {
-  const factory _InjectionModuleConfig(
-      {required final ImportableType type,
-      required final String moduleName}) = _$_InjectionModuleConfig;
+  const factory _InjectionModuleConfig({required final String moduleName}) =
+      _$_InjectionModuleConfig;
 
   factory _InjectionModuleConfig.fromJson(Map<String, dynamic> json) =
       _$_InjectionModuleConfig.fromJson;
 
-  @override
-  ImportableType get type;
   @override
   String get moduleName;
   @override

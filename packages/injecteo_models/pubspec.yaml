@@ -1,4 +1,4 @@
-name: _internal
+name: injecteo_models
 description: Only for internal Freezed models generation
 version: 0.0.1
 publish_to: "none"

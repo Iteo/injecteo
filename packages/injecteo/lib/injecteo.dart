@@ -1,5 +1,6 @@
 library injecteo;
 
+export 'src/base_injection_module.dart';
 export 'src/environment_filter/environment_filter.dart';
 export 'src/environment_filter/no_env_or_contains_all_filter.dart';
 export 'src/environment_filter/no_env_or_contains_any_filter.dart';

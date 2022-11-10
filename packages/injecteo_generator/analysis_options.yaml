@@ -15,4 +15,6 @@ analyzer:
 
 linter:
   rules:
-    - sort_constructors_first
+    always_use_package_imports: false
+    sort_constructors_first: true
+    prefer_relative_imports: true

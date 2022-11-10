@@ -3,13 +3,12 @@ import 'dart:convert';
 
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
-import 'package:injecteo_generator/src/model/dependency_config.dart';
-import 'package:injecteo_generator/src/resolvers/dependency_resolver.dart';
-import 'package:injecteo_generator/src/resolvers/importable_type_resolver.dart';
-import 'package:injecteo_generator/src/resolvers/importable_type_resolver_impl.dart';
-import 'package:injecteo_generator/src/resolvers/type_checker.dart';
-import 'package:injecteo_generator/src/utils/utils.dart';
+import 'package:injecteo_models/injecteo_models.dart';
 import 'package:source_gen/source_gen.dart';
+
+import '../resolvers/dependency_resolver.dart';
+import '../resolvers/importable_type_resolver_impl.dart';
+import '../resolvers/type_checker.dart';
 
 class InjecteoDependencyGenerator implements Generator {
   InjecteoDependencyGenerator(
@@ -29,55 +28,42 @@ class InjecteoDependencyGenerator implements Generator {
     final classes = library.classes;
 
     for (final c in classes) {
+      final hasInjectionModuleAnnotation =
+          injectionModuleChecker.hasAnnotationOf(c);
       final isModule = moduleChecker.hasAnnotationOfExact(c);
-      final isInject = injectChecker.hasAnnotationOf(c);
+      final hasInjectAnnotation = injectChecker.hasAnnotationOf(c);
 
-      if (isModule) {
-        _addModuleDependency(
-          c,
-          typeResolver,
-          allDepsInStep,
+      if (hasInjectionModuleAnnotation) {
+        allDepsInStep.add(
+          DependencyResolver(typeResolver)
+              .resolveWithInjectionModuleAnnotation(c),
         );
-      } else if (isInject) {
-        _addInjectDependency(
-          c,
-          typeResolver,
-          allDepsInStep,
+      } else if (isModule) {
+        if (!c.isAbstract) {
+          throw InvalidGenerationSourceError(
+            '[${c.name}] must be an abstract class!',
+            element: c,
+          );
+        }
+        final moduleProperties = <ExecutableElement>[
+          ...c.accessors,
+          ...c.methods,
+        ];
+        for (final moduleProperty in moduleProperties) {
+          if (moduleProperty.isPrivate) continue;
+          allDepsInStep.add(
+            DependencyResolver(typeResolver).resolveAsModuleMember(
+              c,
+              moduleProperty,
+            ),
+          );
+        }
+      } else if (hasInjectAnnotation) {
+        allDepsInStep.add(
+          DependencyResolver(typeResolver).resolve(c),
         );
       }
     }
     return allDepsInStep.isNotEmpty ? jsonEncode(allDepsInStep) : null;
-  }
-
-  void _addModuleDependency(
-    ClassElement c,
-    ImportableTypeResolver typeResolver,
-    List<DependencyConfig> allDepsInStep,
-  ) {
-    throwIf(
-      !c.isAbstract,
-      '[${c.name}] must be an abstract class!',
-      element: c,
-    );
-    final executables = <ExecutableElement>[
-      ...c.accessors,
-      ...c.methods,
-    ];
-    for (final element in executables) {
-      if (element.isPrivate) continue;
-      allDepsInStep.add(
-        DependencyResolver(typeResolver).resolveModuleMember(c, element),
-      );
-    }
-  }
-
-  void _addInjectDependency(
-    ClassElement c,
-    ImportableTypeResolver typeResolver,
-    List<DependencyConfig> allDepsInStep,
-  ) {
-    allDepsInStep.add(
-      DependencyResolver(typeResolver).resolve(c),
-    );
   }
 }
