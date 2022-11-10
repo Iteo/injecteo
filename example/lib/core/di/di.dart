@@ -5,5 +5,5 @@ import 'di.config.dart';
 
 final sl = GetItServiceLocator.instance;
 
-@injecteoInitializer
-Future<ServiceLocator> configureDependencies() => $injecteoInitializer(sl);
+@injecteoConfig
+Future<void> configureDependencies() => $injecteoInitializer(sl);

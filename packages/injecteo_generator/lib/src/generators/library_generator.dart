@@ -7,6 +7,16 @@ import '../utils/type_refer.dart';
 import '../utils/utils.dart';
 import 'references.dart';
 
+class InjectionModuleWithDependencies {
+  InjectionModuleWithDependencies({
+    required this.injectionModuleConfig,
+    required this.dependencyConfigs,
+  });
+
+  final InjectionModuleConfig injectionModuleConfig;
+  final Set<DependencyConfig> dependencyConfigs;
+}
+
 class LibraryGenerator {
   LibraryGenerator({
     required List<DependencyConfig> dependencies,
@@ -22,16 +32,10 @@ class LibraryGenerator {
   final Uri? _targetFile;
 
   Library generate() {
+    /// envs
+    ///
     final environments =
         _sortedDependencies.expand((element) => element.environments).toSet();
-
-    final injectionModuleConfigs = _sortedDependencies
-        .where((element) => element.isFromInjectionModule)
-        .map((e) => e.injectionModuleConfig!)
-        .toSet();
-
-    final moduleConfigs = _getModuleConfigs(_sortedDependencies);
-
     final environmentFields = environments.map(
       (env) => Field(
         (b) => b
@@ -42,25 +46,59 @@ class LibraryGenerator {
       ),
     );
 
-    final injectionModuleClasses = injectionModuleConfigs.map(
-      (injectionModuleConfig) => _buildInjectionModuleClass(
-        injectionModuleConfig: injectionModuleConfig,
-        injectionModuleDependencies: _sortedDependencies
-            .where((e) => e.injectionModuleConfig == injectionModuleConfig)
-            .toSet(),
-        isAsync: true,
-      ),
-    );
+    /// injection modules
+    ///
 
+    final injectionModuleWithDependencies = <InjectionModuleWithDependencies>{}
+      ..addAll([
+        InjectionModuleWithDependencies(
+          injectionModuleConfig: const InjectionModuleConfig(
+            moduleName: "RemainingDependenciesInjectionModule",
+          ),
+          dependencyConfigs: _sortedDependencies
+              .where((element) => element.isFromInjectionModule == false)
+              .toSet(),
+        ),
+        ..._sortedDependencies.where((x) => x.isFromInjectionModule).map(
+          (dependencyConfig) {
+            final injectionModuleConfig =
+                dependencyConfig.injectionModuleConfig!;
+            final dependenciesInModule = _sortedDependencies
+                .where((element) =>
+                    element.injectionModuleConfig == injectionModuleConfig)
+                .toSet();
+            return InjectionModuleWithDependencies(
+              injectionModuleConfig: injectionModuleConfig,
+              dependencyConfigs: dependenciesInModule,
+            );
+          },
+        )
+      ]);
+
+    final injectionModuleClasses = injectionModuleWithDependencies
+        .map(
+          (injectionModuleWithDependencies) => _buildInjectionModuleClass(
+            injectionModuleWithDependencies,
+          ),
+        )
+        .toList();
+
+    /// external modules
+    ///
+    final moduleConfigs = _getModuleConfigs(_sortedDependencies);
     final moduleClasses = moduleConfigs.map(
       (moduleConfig) => _buildModuleClass(
         module: moduleConfig,
-        moduleDependencies:
-            _sortedDependencies.where((e) => e.moduleConfig == moduleConfig),
+        dependencyConfigs: _sortedDependencies
+            .where((e) => e.moduleConfig == moduleConfig)
+            .toSet(),
       ),
     );
 
-    final initializer = _buildInitializer(moduleConfigs: moduleConfigs);
+    /// initializer
+    ///
+
+    final initializer = _buildInitializer(injectionModuleWithDependencies);
 
     return Library(
       (b) => b
@@ -82,11 +120,10 @@ class LibraryGenerator {
         .toSet();
   }
 
-  Spec _buildInitializer({
-    required Iterable<ModuleConfig> moduleConfigs,
-  }) {
+  Spec _buildInitializer(
+    Set<InjectionModuleWithDependencies> injectionModulesWithDependencies,
+  ) {
     final hasPreResolvedDeps = hasPreResolvedDependencies(_sortedDependencies);
-
     final intiMethod = Method(
       (b) => b
         ..docs.addAll(
@@ -106,13 +143,15 @@ class LibraryGenerator {
             : refer('void')
         ..name = _initializerName
         ..modifier = hasPreResolvedDeps ? MethodModifier.async : null
-        ..requiredParameters.addAll([
-          Parameter(
-            (b) => b
-              ..name = slInstanceName
-              ..type = slTypeReference,
-          )
-        ])
+        ..requiredParameters.addAll(
+          [
+            Parameter(
+              (b) => b
+                ..name = slInstanceName
+                ..type = slTypeReference,
+            )
+          ],
+        )
         ..optionalParameters.addAll(
           [
             Parameter(
@@ -138,20 +177,44 @@ class LibraryGenerator {
             )
           ],
         )
-        //TODO: iterate over modules, register them. Generate missing dependencies (without module)
-        // ..body = _buildRegisterFunctions(),
-        ..body = Code(''),
+        ..body = _initializerBody(injectionModulesWithDependencies),
     );
 
     return intiMethod;
   }
 
+  Block _initializerBody(
+    Set<InjectionModuleWithDependencies> injectionModulesWithDependencies,
+  ) {
+    final statements = injectionModulesWithDependencies.map(
+      (c) {
+        final moduleContainsPreResolvedDeps =
+            hasPreResolvedDependencies(c.dependencyConfigs);
+        final expression = refer(c.injectionModuleConfig.moduleName)
+            .newInstance([])
+            .property(registerDependenciesFuncName)
+            .call(
+              [
+                refer(slInstanceName),
+              ],
+            );
+        return moduleContainsPreResolvedDeps
+            ? expression.awaited.statement
+            : expression.statement;
+      },
+    );
+
+    return Block(
+      (b) => b.statements.addAll(statements),
+    );
+  }
+
   Class _buildModuleClass({
     required ModuleConfig module,
-    required Iterable<DependencyConfig> moduleDependencies,
+    required Set<DependencyConfig> dependencyConfigs,
   }) {
     final abstractDeps =
-        moduleDependencies.where((d) => d.moduleConfig!.isAbstract);
+        dependencyConfigs.where((d) => d.moduleConfig!.isAbstract);
 
     return Class(
       (c) {
@@ -194,9 +257,9 @@ class LibraryGenerator {
                   _targetFile,
                 )
                 ..type = dep.moduleConfig!.isMethod ? null : MethodType.getter
-                ..body = _buildInstance(
-                  dependency: dep,
-                  isAsync: false,
+                ..body = _registerFunctionBody(
+                  dependencyConfig: dep,
+                  dependencyConfigs: dependencyConfigs,
                   instanceForModule: true,
                 ).code,
             ),
@@ -206,15 +269,18 @@ class LibraryGenerator {
     );
   }
 
-  Class _buildInjectionModuleClass({
-    required InjectionModuleConfig injectionModuleConfig,
-    required Set<DependencyConfig> injectionModuleDependencies,
-    required bool isAsync,
-  }) {
+  Class _buildInjectionModuleClass(
+      InjectionModuleWithDependencies injectionModuleWithDependencies) {
+    final dependenciesInModule =
+        injectionModuleWithDependencies.dependencyConfigs;
+    final moduleContainsPreResolvedDeps =
+        hasPreResolvedDependencies(dependenciesInModule);
+
     final c = Class(
       (b) {
         b
-          ..name = '_\$${injectionModuleConfig.moduleName}'
+          ..name =
+              injectionModuleWithDependencies.injectionModuleConfig.moduleName
           ..extend = baseInjectionModuleTypeReference;
 
         b.methods.addAll(
@@ -223,14 +289,15 @@ class LibraryGenerator {
               (b) => b
                 ..name = registerDependenciesFuncName
                 ..annotations.add(refer('override'))
-                ..returns = isAsync
+                ..returns = moduleContainsPreResolvedDeps
                     ? TypeReference(
                         (b) => b
                           ..symbol = 'Future'
                           ..types.add(refer('void')),
                       )
                     : refer('void')
-                ..modifier = isAsync ? MethodModifier.async : null
+                ..modifier =
+                    moduleContainsPreResolvedDeps ? MethodModifier.async : null
                 ..requiredParameters.addAll(
                   [
                     Parameter(
@@ -240,33 +307,8 @@ class LibraryGenerator {
                     )
                   ],
                 )
-                ..optionalParameters.addAll(
-                  [
-                    Parameter(
-                      (b) => b
-                        ..named = true
-                        ..name = 'environment'
-                        ..type = TypeReference(
-                          (b) => b
-                            ..symbol = 'String'
-                            ..isNullable = true,
-                        ),
-                    ),
-                    Parameter(
-                      (b) => b
-                        ..named = true
-                        ..name = 'environmentFilter'
-                        ..type = TypeReference(
-                          (b) => b
-                            ..symbol = 'EnvironmentFilter'
-                            ..url = injecteoImport
-                            ..isNullable = true,
-                        ),
-                    )
-                  ],
-                )
                 ..body = _buildRegisterFunctions(
-                  dependencyConfigs: injectionModuleDependencies,
+                  dependencyConfigs: dependenciesInModule,
                 ),
             ),
           ],
@@ -295,7 +337,7 @@ class LibraryGenerator {
 
     final moduleAssignmentsCode = moduleConfigs.map(
       (moduleConfig) {
-        final moduleCode = refer('_\$${moduleConfig.type.name}')
+        return refer('_\$${moduleConfig.type.name}')
             .call(
               [
                 if (moduleHasOverrides(
@@ -307,14 +349,13 @@ class LibraryGenerator {
             )
             .assignFinal(toCamelCase(moduleConfig.type.name))
             .statement;
-        return moduleCode;
       },
     );
 
     final registerFunctionsCode = dependencyConfigs.map(
       (dep) => _buildRegisterFunction(
-        dependency: dep,
-        isAsync: hasAsyncDependency(dep, dependencyConfigs),
+        dependencyConfig: dep,
+        dependencyConfigs: dependencyConfigs,
       ),
     );
 
@@ -330,19 +371,16 @@ class LibraryGenerator {
   }
 
   Code _buildRegisterFunction({
-    required DependencyConfig dependency,
-    required bool isAsync,
+    required DependencyConfig dependencyConfig,
+    required Set<DependencyConfig> dependencyConfigs,
   }) {
-    final registerFuncName = _getRegisterFunctionName(
-      dependency: dependency,
-      hasAsyncDependencies: isAsync,
-    );
+    final asyncOrPreResolve = dependencyConfig.preResolve ||
+        hasAsyncDependency(dependencyConfig, dependencyConfigs);
 
-    final body = _buildInstance(
-      dependency: dependency,
-      isAsync: isAsync,
-      instanceForModule: dependency.isFromModule,
-    ).code;
+    final registerFuncName = _getRegisterFunctionName(
+      dependencyConfig: dependencyConfig,
+      isAsync: asyncOrPreResolve,
+    );
 
     final registerExpression =
         slHelperInstanceReference.property(registerFuncName).call(
@@ -350,96 +388,104 @@ class LibraryGenerator {
         Method(
           (b) => b
             ..lambda = true
-            ..modifier = isAsync ? MethodModifier.async : null
-            ..body = body,
+            ..modifier = asyncOrPreResolve ? MethodModifier.async : null
+            ..body = _registerFunctionBody(
+              dependencyConfig: dependencyConfig,
+              dependencyConfigs: dependencyConfigs,
+              instanceForModule: dependencyConfig.isFromModule,
+            ).code,
         ).closure
       ],
       {
-        if (dependency.instanceName != null)
-          'instanceName': literalString(dependency.instanceName!),
-        if (dependency.environments.isNotEmpty == true)
+        if (dependencyConfig.instanceName != null)
+          'instanceName': literalString(dependencyConfig.instanceName!),
+        if (dependencyConfig.environments.isNotEmpty == true)
           'registerFor': literalSet(
-            dependency.environments.map((e) => refer('_$e')),
+            dependencyConfig.environments.map((e) => refer('_$e')),
           ),
-        if (dependency.preResolve == true) 'preResolve': literalBool(true),
-        if (dependency.disposeFunctionConfig != null)
-          'dispose':
-              _getDisposeFunctionAssignment(dependency.disposeFunctionConfig!),
-        if (dependency.dependsOn.isNotEmpty)
+        if (dependencyConfig.preResolve == true)
+          'preResolve': literalBool(true),
+        if (dependencyConfig.disposeFunctionConfig != null)
+          'dispose': _getDisposeFunctionAssignment(
+              dependencyConfig.disposeFunctionConfig!),
+        if (dependencyConfig.dependsOn.isNotEmpty)
           'dependsOn': literalList(
-            dependency.dependsOn.map(
+            dependencyConfig.dependsOn.map(
               (e) => typeRefer(
                 e,
                 _targetFile,
               ),
             ),
           ),
-        if (dependency.signalsReady != null)
-          'signalsReady': literalBool(dependency.signalsReady!),
+        if (dependencyConfig.signalsReady != null)
+          'signalsReady': literalBool(dependencyConfig.signalsReady!),
       },
       [
-        typeRefer(dependency.type, _targetFile),
+        typeRefer(
+          dependencyConfig.type,
+          _targetFile,
+        ),
       ],
     );
 
-    return dependency.preResolve
+    return dependencyConfig.preResolve
         ? registerExpression.awaited.statement
         : registerExpression.statement;
   }
 
   String _getRegisterFunctionName({
-    required DependencyConfig dependency,
-    required bool hasAsyncDependencies,
+    required DependencyConfig dependencyConfig,
+    required bool isAsync,
   }) {
-    final isOrHasAsyncDep = dependency.isAsync || hasAsyncDependencies;
-
-    if (dependency.dependencyType == DependencyType.factory) {
-      return isOrHasAsyncDep
-          ? registerFactoryAsyncFuncName
-          : registerFactoryFuncName;
-    } else if (dependency.dependencyType == DependencyType.lazySingleton) {
-      return isOrHasAsyncDep
+    if (dependencyConfig.dependencyType == DependencyType.factory) {
+      return isAsync ? registerFactoryAsyncFuncName : registerFactoryFuncName;
+    } else if (dependencyConfig.dependencyType ==
+        DependencyType.lazySingleton) {
+      return isAsync
           ? registerLazySingletonAsyncFuncName
           : registerLazySingletonFuncName;
-    } else if (dependency.dependencyType == DependencyType.singleton) {
-      if (isOrHasAsyncDep) {
-        return registerSingletonAsyncFuncName;
-      } else {
-        return registerSingletonFuncName;
-      }
+    } else if (dependencyConfig.dependencyType == DependencyType.singleton) {
+      return isAsync
+          ? registerSingletonAsyncFuncName
+          : registerSingletonFuncName;
     }
 
     throw InvalidGenerationSourceError(
-      'Injecteo type is not supported. Check if function name responsible for generation ${dependency.dependencyType} is set',
+      'Injecteo type is not supported. Check if function name responsible for generation ${dependencyConfig.dependencyType} is set. Dependency config: $dependencyConfig',
     );
   }
 
-  Expression _buildInstance({
-    required DependencyConfig dependency,
-    required bool isAsync,
+  Expression _registerFunctionBody({
+    required DependencyConfig dependencyConfig,
+    required Set<DependencyConfig> dependencyConfigs,
     required bool instanceForModule,
   }) {
-    final positionalParams = dependency.positionalDependencies.map(
-      (injectedDependency) => _buildParamAssignment(
+    final positionalParams = dependencyConfig.positionalDependencies.map(
+      (injectedDependency) => _createGetDependencyExpression(
         injectedDependency: injectedDependency,
-        isAsync: isAsync,
+        isAsync: isAsyncOrHasAsyncDependency(
+          injectedDependency,
+          dependencyConfigs,
+        ),
       ),
     );
-
     final namedParams = Map.fromEntries(
-      dependency.namedDependencies.map(
+      dependencyConfig.namedDependencies.map(
         (injectedDependency) => MapEntry(
           injectedDependency.paramName,
-          _buildParamAssignment(
+          _createGetDependencyExpression(
             injectedDependency: injectedDependency,
-            isAsync: isAsync,
+            isAsync: isAsyncOrHasAsyncDependency(
+              injectedDependency,
+              dependencyConfigs,
+            ),
           ),
         ),
       ),
     );
 
     if (instanceForModule) {
-      final module = dependency.moduleConfig!;
+      final module = dependencyConfig.moduleConfig!;
       if (!module.isMethod) {
         return refer(
           toCamelCase(module.type.name),
@@ -454,14 +500,15 @@ class LibraryGenerator {
     }
 
     final ref = typeRefer(
-      dependency.typeImplementation,
+      dependencyConfig.typeImplementation,
       _targetFile,
     );
+    final isNamedInstance =
+        dependencyConfig.constructorName?.isNotEmpty == true;
 
-    final isNamedInstance = dependency.constructorName?.isNotEmpty == true;
     if (isNamedInstance) {
       return ref.newInstanceNamed(
-        dependency.constructorName!,
+        dependencyConfig.constructorName!,
         positionalParams,
         namedParams,
       );
@@ -491,7 +538,7 @@ class LibraryGenerator {
     }
   }
 
-  Expression _buildParamAssignment({
+  Expression _createGetDependencyExpression({
     required InjectedDependency injectedDependency,
     required bool isAsync,
   }) {
@@ -512,10 +559,4 @@ class LibraryGenerator {
     );
     return isAsync ? expression.awaited : expression;
   }
-}
-
-bool moduleHasOverrides(Iterable<DependencyConfig> deps) {
-  return deps.where((d) => d.moduleConfig?.isAbstract == true).any(
-        (d) => d.dependencies.isNotEmpty == true,
-      );
 }

@@ -5,6 +5,9 @@ import 'package:injecteo_annotation/injecteo_annotation.dart';
 abstract class LoggerConfig {
   final _debugTree = DebugTree(useColors: true);
 
-  @Singleton()
+  @dev
   LogTree get logTree => _debugTree;
+
+  @prod
+  LogTree get prodTree => _debugTree;
 }

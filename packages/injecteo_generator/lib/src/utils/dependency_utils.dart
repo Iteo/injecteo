@@ -1,7 +1,8 @@
 import 'package:injecteo_models/injecteo_models.dart';
 
 Set<DependencyConfig> sortDependencies(
-    List<DependencyConfig> dependencyConfigs) {
+  List<DependencyConfig> dependencyConfigs,
+) {
   // sort dependencies alphabetically
   dependencyConfigs.sort((a, b) => a.type.name.compareTo(b.type.name));
   // sort dependencies by their register order
@@ -17,22 +18,24 @@ void _sortByDependents(
   for (final dep in unSorted) {
     if (dep.dependencies.every(
       (dependency) {
-        // if dep is already in sorted return true
-        if (findDependencyWithNoEnvOrHasAny(
+        final alreadySorted = findDependencyConfigWithNoEnvOrHasAny(
               dependency,
               sorted,
               dep.environments,
             ) !=
-            null) {
+            null;
+
+        if (alreadySorted) {
           return true;
         }
-        // if dep is in unSorted we skip it in this iteration, if not we include it
-        return findDependencyWithNoEnvOrHasAny(
+
+        final notInUnsorted = findDependencyConfigWithNoEnvOrHasAny(
               dependency,
               unSorted,
               dep.environments,
             ) ==
             null;
+        return notInUnsorted;
       },
     )) {
       sorted.add(dep);
@@ -47,16 +50,16 @@ bool isAsyncOrHasAsyncDependency(
   InjectedDependency dependency,
   Set<DependencyConfig> dependencyConfigs,
 ) {
-  final dep = findDependency(dependency, dependencyConfigs);
-  if (dep == null) {
+  final config = findDependencyConfig(dependency, dependencyConfigs);
+  if (config == null) {
     return false;
   }
 
-  if (dep.isAsync && !dep.preResolve) {
+  if (config.isAsync && !config.preResolve) {
     return true;
   }
 
-  return hasAsyncDependency(dep, dependencyConfigs);
+  return hasAsyncDependency(config, dependencyConfigs);
 }
 
 bool hasAsyncDependency(
@@ -64,7 +67,7 @@ bool hasAsyncDependency(
   Set<DependencyConfig> dependencyConfigs,
 ) {
   for (final dep in dependencyConfig.dependencies) {
-    final config = findDependency(dep, dependencyConfigs);
+    final config = findDependencyConfig(dep, dependencyConfigs);
 
     // If the dependency corresponding to the InjectedDependency couldn't be
     // found, this probably indicates there is a missing dependency.
@@ -86,18 +89,29 @@ bool hasAsyncDependency(
   return false;
 }
 
-DependencyConfig? findDependency(
+Set<DependencyConfig> findDepsMatchingTypeAndName(
+  InjectedDependency dep,
+  Iterable<DependencyConfig> dependencyConfigs,
+) {
+  return dependencyConfigs
+      .where(
+        (d) => d.type == dep.type && d.instanceName == dep.instanceName,
+      )
+      .toSet();
+}
+
+DependencyConfig? findDependencyConfig(
   InjectedDependency dep,
   Set<DependencyConfig> dependencyConfigs,
 ) {
   try {
-    return findPossibleDeps(dep, dependencyConfigs).first;
+    return findDepsMatchingTypeAndName(dep, dependencyConfigs).first;
   } catch (e) {
     return null;
   }
 }
 
-DependencyConfig? findDependencyWithNoEnvOrHasAny(
+DependencyConfig? findDependencyConfigWithNoEnvOrHasAny(
   InjectedDependency dependency,
   Set<DependencyConfig> dependencyConfigs,
   List<String> envs,
@@ -118,17 +132,12 @@ DependencyConfig? findDependencyWithNoEnvOrHasAny(
   }
 }
 
-Set<DependencyConfig> findPossibleDeps(
-  InjectedDependency dep,
-  Iterable<DependencyConfig> dependencyConfigs,
-) {
-  return dependencyConfigs
-      .where(
-        (d) => d.type == dep.type && d.instanceName == dep.instanceName,
-      )
-      .toSet();
+bool hasPreResolvedDependencies(Set<DependencyConfig> dependencyConfigs) {
+  return dependencyConfigs.any((d) => d.isAsync && d.preResolve);
 }
 
-bool hasPreResolvedDependencies(Set<DependencyConfig> deps) {
-  return deps.any((d) => d.isAsync && d.preResolve);
+bool moduleHasOverrides(Iterable<DependencyConfig> dependencyConfigs) {
+  return dependencyConfigs.where((d) => d.moduleConfig?.isAbstract == true).any(
+        (d) => d.dependencies.isNotEmpty == true,
+      );
 }

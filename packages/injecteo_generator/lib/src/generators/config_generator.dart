@@ -11,8 +11,7 @@ import 'package:source_gen/source_gen.dart';
 
 import 'library_generator.dart';
 
-class InjecteoInitializerGenerator
-    extends GeneratorForAnnotation<InjecteoInitializer> {
+class InjecteoConfigGenerator extends GeneratorForAnnotation<InjecteoConfig> {
   @override
   dynamic generateForAnnotatedElement(
     Element element,

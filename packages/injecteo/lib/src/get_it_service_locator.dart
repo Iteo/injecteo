@@ -91,9 +91,10 @@ class GetItServiceLocator implements ServiceLocator {
     String? instanceName,
     DisposeFunc<T>? dispose,
   }) {
-    final instance = factoryFunc();
-    return _getIt.registerSingleton(
-      instance,
+    // TODO: in the future, you can replace _getIt for your own Service Locator
+    // That (next) implementation should support registerSingleton that does not depend on registration order
+    return _getIt.registerLazySingleton(
+      factoryFunc,
       instanceName: instanceName,
       dispose: dispose,
     );

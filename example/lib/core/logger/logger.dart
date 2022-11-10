@@ -1,4 +1,3 @@
-import 'package:di_example/core/di/di.dart';
 import 'package:di_example/core/di/logger_injection_module.dart';
 import 'package:fimber/fimber.dart';
 import 'package:injecteo_annotation/injecteo_annotation.dart';
@@ -6,8 +5,8 @@ import 'package:injecteo_annotation/injecteo_annotation.dart';
 @loggerInjectionModule
 @singleton
 class Logger {
-  Logger() {
-    Fimber.plantTree(sl());
+  Logger(LogTree logTree) {
+    Fimber.plantTree(logTree);
   }
 
   void v(String message, {dynamic ex, StackTrace? stacktrace}) {

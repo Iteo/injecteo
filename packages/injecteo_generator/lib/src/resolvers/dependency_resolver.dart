@@ -236,7 +236,6 @@ class DependencyResolver {
           element: disposeFuncFromAnnotation,
         );
       }
-
       _disposeFunctionConfig = DisposeFunctionConfig(
         name: disposeFuncFromAnnotation.name,
         importableType: _typeResolver.resolveFunctionType(
@@ -280,6 +279,7 @@ class DependencyResolver {
 
     _isAsync = factoryMethodOrConstructor.returnType.isDartAsyncFuture;
     _constructorName = factoryMethodOrConstructor.name;
+
     for (final param in factoryMethodOrConstructor.parameters) {
       final namedAnnotation = namedChecker.firstAnnotationOf(param);
       final instanceName = namedAnnotation
