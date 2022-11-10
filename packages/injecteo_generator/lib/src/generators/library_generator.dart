@@ -101,9 +101,9 @@ class LibraryGenerator {
             ? TypeReference(
                 (b) => b
                   ..symbol = 'Future'
-                  ..types.add(slTypeReference),
+                  ..types.add(refer('void')),
               )
-            : slTypeReference
+            : refer('void')
         ..name = _initializerName
         ..modifier = hasPreResolvedDeps ? MethodModifier.async : null
         ..requiredParameters.addAll([
