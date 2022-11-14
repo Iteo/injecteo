@@ -1,4 +1,5 @@
 import 'package:code_builder/code_builder.dart';
+import 'package:collection/collection.dart';
 import 'package:injecteo_models/injecteo_models.dart';
 import 'package:source_gen/source_gen.dart';
 
@@ -6,16 +7,6 @@ import '../utils/dependency_utils.dart';
 import '../utils/type_refer.dart';
 import '../utils/utils.dart';
 import 'references.dart';
-
-class InjectionModuleWithDependencies {
-  InjectionModuleWithDependencies({
-    required this.injectionModuleConfig,
-    required this.dependencyConfigs,
-  });
-
-  final InjectionModuleConfig injectionModuleConfig;
-  final Set<DependencyConfig> dependencyConfigs;
-}
 
 class LibraryGenerator {
   LibraryGenerator({
@@ -49,12 +40,11 @@ class LibraryGenerator {
     /// external modules
     /// iterate all dependencies and extract unique external modules to generate their helpers classes
     ///
-    final externalModuleConfigs = <ExternalModuleConfig>{};
-    for (final dep in _sortedDependencies) {
-      if (dep.externalModuleConfig != null) {
-        externalModuleConfigs.add(dep.externalModuleConfig!);
-      }
-    }
+    final externalModuleConfigs = _sortedDependencies
+        .where((element) => element.isFromExternalModule)
+        .map((e) => e.externalModuleConfig!)
+        .toSet();
+
     final externalModuleClasses = externalModuleConfigs.map(
       (config) => _buildExternalModuleClass(
         externalModuleConfig: config,
@@ -66,40 +56,16 @@ class LibraryGenerator {
 
     /// injection modules
     ///
-    final injectionModuleWithDependencies = <InjectionModuleWithDependencies>{}
-      ..addAll(
-        [
-          InjectionModuleWithDependencies(
-            injectionModuleConfig: const InjectionModuleConfig(
-              moduleName: "RemainingDependenciesInjectionModule",
-            ),
-            dependencyConfigs: _sortedDependencies
-                .where((element) => element.isFromInjectionModule == false)
-                .toSet(),
-          ),
-          ..._sortedDependencies.where((x) => x.isFromInjectionModule).map(
-            (dependencyConfig) {
-              final injectionModuleConfig =
-                  dependencyConfig.injectionModuleConfig!;
-              final dependenciesInModule = _sortedDependencies
-                  .where(
-                    (element) =>
-                        element.injectionModuleConfig == injectionModuleConfig,
-                  )
-                  .toSet();
-              return InjectionModuleWithDependencies(
-                injectionModuleConfig: injectionModuleConfig,
-                dependencyConfigs: dependenciesInModule,
-              );
-            },
-          )
-        ],
-      );
+    final injectionModuleWithDependencies = groupBy(
+      _sortedDependencies,
+      (x) => x.injectionModuleConfig,
+    );
 
-    final injectionModuleClasses = injectionModuleWithDependencies
+    final injectionModuleClasses = injectionModuleWithDependencies.entries
         .map(
-          (injectionModuleWithDependencies) => _buildInjectionModuleClass(
-            injectionModuleWithDependencies,
+          (entry) => _buildInjectionModuleClass(
+            injectionModuleConfig: entry.key,
+            dependencyConfigs: entry.value,
           ),
         )
         .toList();
@@ -118,7 +84,8 @@ class LibraryGenerator {
   }
 
   Spec _buildConfigFunction(
-    Set<InjectionModuleWithDependencies> injectionModulesWithDependencies,
+    Map<InjectionModuleConfig, Iterable<DependencyConfig>>
+        injectionModulesWithDependencies,
   ) {
     final hasPreResolvedDeps = hasPreResolvedDependencies(_sortedDependencies);
     final intiMethod = Method(
@@ -176,11 +143,11 @@ class LibraryGenerator {
         )
         ..body = Block(
           (b) => b.statements.addAll(
-            injectionModulesWithDependencies.map(
-              (c) {
+            injectionModulesWithDependencies.entries.map(
+              (entry) {
                 final moduleContainsPreResolvedDeps =
-                    hasPreResolvedDependencies(c.dependencyConfigs);
-                final expression = refer(c.injectionModuleConfig.moduleName)
+                    hasPreResolvedDependencies(entry.value.toSet());
+                final expression = refer(entry.key.moduleName)
                     .newInstance([])
                     .property(registerDependenciesFuncName)
                     .call(
@@ -262,19 +229,17 @@ class LibraryGenerator {
     );
   }
 
-  Class _buildInjectionModuleClass(
-    InjectionModuleWithDependencies injectionModuleWithDependencies,
-  ) {
-    final dependenciesInModule =
-        injectionModuleWithDependencies.dependencyConfigs;
+  Class _buildInjectionModuleClass({
+    required InjectionModuleConfig injectionModuleConfig,
+    required Iterable<DependencyConfig> dependencyConfigs,
+  }) {
     final moduleContainsPreResolvedDeps =
-        hasPreResolvedDependencies(dependenciesInModule);
+        hasPreResolvedDependencies(dependencyConfigs.toSet());
 
     final c = Class(
       (b) {
         b
-          ..name =
-              injectionModuleWithDependencies.injectionModuleConfig.moduleName
+          ..name = injectionModuleConfig.moduleName
           ..extend = baseInjectionModuleTypeReference;
 
         b.methods.addAll(
@@ -302,7 +267,7 @@ class LibraryGenerator {
                   ],
                 )
                 ..body = _buildRegisterFunctions(
-                  dependencyConfigs: dependenciesInModule,
+                  dependencyConfigs: dependencyConfigs.toSet(),
                 ),
             ),
           ],
@@ -316,13 +281,10 @@ class LibraryGenerator {
   Block _buildRegisterFunctions({
     required Set<DependencyConfig> dependencyConfigs,
   }) {
-    final externalModuleConfigs = <ExternalModuleConfig>{};
-    for (final dep in dependencyConfigs) {
-      final externalModuleConfig = dep.externalModuleConfig;
-      if (externalModuleConfig != null) {
-        externalModuleConfigs.add(externalModuleConfig);
-      }
-    }
+    final externalModuleConfigs = dependencyConfigs
+        .where((element) => element.isFromExternalModule)
+        .map((e) => e.externalModuleConfig!)
+        .toSet();
 
     final environmentFilterCode = slHelperTypeReference
         .newInstance(

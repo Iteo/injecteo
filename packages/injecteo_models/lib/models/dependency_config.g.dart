@@ -11,6 +11,8 @@ _$_DependencyConfig _$$_DependencyConfigFromJson(Map<String, dynamic> json) =>
       type: ImportableType.fromJson(json['type'] as Map<String, dynamic>),
       typeImplementation: ImportableType.fromJson(
           json['typeImplementation'] as Map<String, dynamic>),
+      injectionModuleConfig: InjectionModuleConfig.fromJson(
+          json['injectionModuleConfig'] as Map<String, dynamic>),
       dependencyType: $enumDecodeNullable(
               _$DependencyTypeEnumMap, json['dependencyType']) ??
           DependencyType.factory,
@@ -36,10 +38,6 @@ _$_DependencyConfig _$$_DependencyConfigFromJson(Map<String, dynamic> json) =>
           ? null
           : ExternalModuleConfig.fromJson(
               json['externalModuleConfig'] as Map<String, dynamic>),
-      injectionModuleConfig: json['injectionModuleConfig'] == null
-          ? null
-          : InjectionModuleConfig.fromJson(
-              json['injectionModuleConfig'] as Map<String, dynamic>),
       disposeFunctionConfig: json['disposeFunctionConfig'] == null
           ? null
           : DisposeFunctionConfig.fromJson(
@@ -50,6 +48,7 @@ Map<String, dynamic> _$$_DependencyConfigToJson(_$_DependencyConfig instance) =>
     <String, dynamic>{
       'type': instance.type,
       'typeImplementation': instance.typeImplementation,
+      'injectionModuleConfig': instance.injectionModuleConfig,
       'dependencyType': _$DependencyTypeEnumMap[instance.dependencyType]!,
       'dependencies': instance.dependencies,
       'environments': instance.environments,
@@ -60,7 +59,6 @@ Map<String, dynamic> _$$_DependencyConfigToJson(_$_DependencyConfig instance) =>
       'isAsync': instance.isAsync,
       'preResolve': instance.preResolve,
       'externalModuleConfig': instance.externalModuleConfig,
-      'injectionModuleConfig': instance.injectionModuleConfig,
       'disposeFunctionConfig': instance.disposeFunctionConfig,
     };
 

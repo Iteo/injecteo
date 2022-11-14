@@ -18,6 +18,8 @@ class DependencyResolver {
   final List<InjectedDependency> _dependencies = [];
   final List<ImportableType> _dependsOn = [];
 
+  late final InjectionModuleConfig _injectionModuleConfig;
+
   DependencyType _dependencyType = DependencyType.factory;
   bool _preResolve = false;
   bool _isAsync = false;
@@ -28,44 +30,74 @@ class DependencyResolver {
   String? _instanceName;
   String? _constructorName;
   ExternalModuleConfig? _externalModuleConfig;
-  InjectionModuleConfig? _injectionModuleConfig;
   DisposeFunctionConfig? _disposeFunctionConfig;
 
-  DependencyConfig resolve(
+  Iterable<DependencyConfig> resolve(
     ClassElement classElement,
   ) {
-    _type = _typeResolver.resolveType(classElement.thisType);
-    return _resolveActualType(classElement);
-  }
+    final hasInjectionModuleAnnotation =
+        injectionModuleChecker.hasAnnotationOf(classElement);
 
-  /// Dependency with InjectionModule means that it will be registered inside separate class
-  /// in order to plug and play modules in main initializer
-  ///
-  DependencyConfig resolveWithInjectionModuleAnnotation(
-    ClassElement classElement,
-  ) {
-    final firstAnnotation = injectionModuleChecker.firstAnnotationOf(
-      classElement,
-      throwOnUnresolved: false,
-    );
-
-    final annotation = ConstantReader(firstAnnotation);
-    final injectionModuleName = annotation.peek('name')?.stringValue;
-    if (injectionModuleName == null) {
-      throw InvalidGenerationSourceError(
-        'Injection module should have a name',
-        element: classElement,
+    if (hasInjectionModuleAnnotation) {
+      final injectionModuleAnnotation =
+          injectionModuleChecker.firstAnnotationOf(
+        classElement,
+        throwOnUnresolved: false,
+      );
+      final annotation = ConstantReader(injectionModuleAnnotation);
+      final injectionModuleName = annotation.peek('name')?.stringValue;
+      if (injectionModuleName == null) {
+        throw InvalidGenerationSourceError(
+          'Injection module should have a name',
+          element: classElement,
+        );
+      }
+      _injectionModuleConfig = InjectionModuleConfig(
+        moduleName: injectionModuleName,
+      );
+    } else {
+      _injectionModuleConfig = const InjectionModuleConfig(
+        moduleName: "OtherInjectionModule",
       );
     }
-    _injectionModuleConfig = InjectionModuleConfig(
-      moduleName: injectionModuleName,
-    );
-    return resolve(classElement);
+
+    final hasExternalModuleAnnotation =
+        externalModuleChecker.hasAnnotationOfExact(classElement);
+
+    if (hasExternalModuleAnnotation) {
+      if (!classElement.isAbstract) {
+        throw InvalidGenerationSourceError(
+          '[${classElement.name}] must be an abstract class!',
+          element: classElement,
+        );
+      }
+      final moduleElements = <ExecutableElement>[
+        ...classElement.accessors,
+        ...classElement.methods,
+      ];
+
+      final externalModuleDependencyConfigs = <DependencyConfig>[];
+      for (final moduleElement in moduleElements) {
+        if (moduleElement.isPrivate) continue;
+        externalModuleDependencyConfigs.add(
+          _resolveAsExternalModuleMember(
+            classElement,
+            moduleElement,
+          ),
+        );
+      }
+      return externalModuleDependencyConfigs;
+    }
+
+    // resolve with [Inject] annotation
+    _type = _typeResolver.resolveType(classElement.thisType);
+    final dependencyConfig = _resolveActualType(classElement);
+    return [dependencyConfig];
   }
 
-  /// Dependency which is part of Module needs to have module-specific attributes
-  /// Method extracts them and put into [ModuleConfig]
-  DependencyConfig resolveAsModuleMember(
+  /// Dependency which is part of [ExternalModule] needs to have module-specific attributes
+  /// Method extracts them and put into [ExternalModuleConfig]
+  DependencyConfig _resolveAsExternalModuleMember(
     ClassElement moduleClassElement,
     ExecutableElement moduleElement,
   ) {
@@ -305,6 +337,7 @@ class DependencyResolver {
     return DependencyConfig(
       type: _type,
       typeImplementation: _typeImplementation,
+      injectionModuleConfig: _injectionModuleConfig,
       dependencyType: _dependencyType,
       dependencies: _dependencies,
       dependsOn: _dependsOn,
@@ -313,7 +346,6 @@ class DependencyResolver {
       preResolve: _preResolve,
       instanceName: _instanceName,
       externalModuleConfig: _externalModuleConfig,
-      injectionModuleConfig: _injectionModuleConfig,
       constructorName: _constructorName,
       isAsync: _isAsync,
       disposeFunctionConfig: _disposeFunctionConfig,

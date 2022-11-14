@@ -2,10 +2,10 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'dependency_type.dart';
 import 'dispose_function_config.dart';
+import 'external_module_config.dart';
 import 'importable_type.dart';
 import 'injected_dependency.dart';
 import 'injection_module_config.dart';
-import 'external_module_config.dart';
 
 part 'dependency_config.freezed.dart';
 part 'dependency_config.g.dart';
@@ -15,6 +15,7 @@ class DependencyConfig with _$DependencyConfig {
   const factory DependencyConfig({
     required ImportableType type,
     required ImportableType typeImplementation,
+    required InjectionModuleConfig injectionModuleConfig,
     @Default(DependencyType.factory) DependencyType dependencyType,
     @Default([]) List<InjectedDependency> dependencies,
     @Default([]) List<String> environments,
@@ -25,7 +26,6 @@ class DependencyConfig with _$DependencyConfig {
     @Default(false) bool isAsync,
     @Default(false) bool preResolve,
     ExternalModuleConfig? externalModuleConfig,
-    InjectionModuleConfig? injectionModuleConfig,
     DisposeFunctionConfig? disposeFunctionConfig,
   }) = _DependencyConfig;
 
