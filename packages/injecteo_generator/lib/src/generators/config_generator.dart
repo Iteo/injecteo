@@ -21,7 +21,8 @@ class InjecteoConfigGenerator extends GeneratorForAnnotation<InjecteoConfig> {
     final preferRelativeImports =
         annotation.read("preferRelativeImports").boolValue;
     final targetFile = preferRelativeImports ? element.source?.uri : null;
-    final initializerName = annotation.read('initializerName').stringValue;
+    final configFunctionName =
+        annotation.read('configFunctionName').stringValue;
 
     final pattern = Glob("**.injecteo.json");
     final jsonData = <Map<String, dynamic>>[];
@@ -39,7 +40,7 @@ class InjecteoConfigGenerator extends GeneratorForAnnotation<InjecteoConfig> {
     final generator = LibraryGenerator(
       dependencies: dependencyConfig,
       targetFile: targetFile,
-      initializerName: initializerName,
+      configFunctionName: configFunctionName,
     );
 
     final generatedLib = generator.generate();

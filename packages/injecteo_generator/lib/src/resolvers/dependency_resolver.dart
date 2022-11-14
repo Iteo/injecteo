@@ -27,7 +27,7 @@ class DependencyResolver {
 
   String? _instanceName;
   String? _constructorName;
-  ModuleConfig? _moduleConfig;
+  ExternalModuleConfig? _externalModuleConfig;
   InjectionModuleConfig? _injectionModuleConfig;
   DisposeFunctionConfig? _disposeFunctionConfig;
 
@@ -83,8 +83,8 @@ class DependencyResolver {
 
     ClassElement c;
     var isAbstract = false;
-
     var type = returnType;
+
     if (moduleElement.isAbstract) {
       c = moduleElementReturnType;
       isAbstract = true;
@@ -110,7 +110,7 @@ class DependencyResolver {
         c = moduleElementReturnType;
       }
     }
-    _moduleConfig = ModuleConfig(
+    _externalModuleConfig = ExternalModuleConfig(
       isAbstract: isAbstract,
       isMethod: moduleElement is MethodElement,
       type: moduleType,
@@ -312,7 +312,7 @@ class DependencyResolver {
       signalsReady: _signalsReady,
       preResolve: _preResolve,
       instanceName: _instanceName,
-      moduleConfig: _moduleConfig,
+      externalModuleConfig: _externalModuleConfig,
       injectionModuleConfig: _injectionModuleConfig,
       constructorName: _constructorName,
       isAsync: _isAsync,

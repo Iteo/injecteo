@@ -12,6 +12,6 @@ const TypeChecker disposeMethodChecker = TypeChecker.fromRuntime(DisposeMethod);
 const TypeChecker factoryMethodChecker = TypeChecker.fromRuntime(FactoryMethod);
 const TypeChecker preResolveChecker = TypeChecker.fromRuntime(PreResolve);
 
-const TypeChecker moduleChecker = TypeChecker.fromRuntime(Module);
+const TypeChecker externalModuleChecker = TypeChecker.fromRuntime(ExternalModule);
 const TypeChecker injectionModuleChecker =
     TypeChecker.fromRuntime(InjectionModule);

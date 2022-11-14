@@ -3,16 +3,16 @@
 class InjecteoConfig {
   const InjecteoConfig({
     this.preferRelativeImports = true,
-    this.initializerName = r'$injecteoConfig',
+    this.configFunctionName = r'$injecteoConfig',
   });
 
   /// Use relative imports
   ///
   final bool preferRelativeImports;
 
-  /// Generated initializer function name
+  /// Generated configuration function name
   ///
-  final String initializerName;
+  final String configFunctionName;
 }
 
 const injecteoConfig = InjecteoConfig();

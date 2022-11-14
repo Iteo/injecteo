@@ -32,7 +32,8 @@ mixin _$DependencyConfig {
   String? get constructorName => throw _privateConstructorUsedError;
   bool get isAsync => throw _privateConstructorUsedError;
   bool get preResolve => throw _privateConstructorUsedError;
-  ModuleConfig? get moduleConfig => throw _privateConstructorUsedError;
+  ExternalModuleConfig? get externalModuleConfig =>
+      throw _privateConstructorUsedError;
   InjectionModuleConfig? get injectionModuleConfig =>
       throw _privateConstructorUsedError;
   DisposeFunctionConfig? get disposeFunctionConfig =>
@@ -62,13 +63,12 @@ abstract class $DependencyConfigCopyWith<$Res> {
       String? constructorName,
       bool isAsync,
       bool preResolve,
-      ModuleConfig? moduleConfig,
+      ExternalModuleConfig? externalModuleConfig,
       InjectionModuleConfig? injectionModuleConfig,
       DisposeFunctionConfig? disposeFunctionConfig});
 
   $ImportableTypeCopyWith<$Res> get type;
   $ImportableTypeCopyWith<$Res> get typeImplementation;
-  $ModuleConfigCopyWith<$Res>? get moduleConfig;
   $InjectionModuleConfigCopyWith<$Res>? get injectionModuleConfig;
   $DisposeFunctionConfigCopyWith<$Res>? get disposeFunctionConfig;
 }
@@ -97,7 +97,7 @@ class _$DependencyConfigCopyWithImpl<$Res, $Val extends DependencyConfig>
     Object? constructorName = freezed,
     Object? isAsync = null,
     Object? preResolve = null,
-    Object? moduleConfig = freezed,
+    Object? externalModuleConfig = freezed,
     Object? injectionModuleConfig = freezed,
     Object? disposeFunctionConfig = freezed,
   }) {
@@ -146,10 +146,10 @@ class _$DependencyConfigCopyWithImpl<$Res, $Val extends DependencyConfig>
           ? _value.preResolve
           : preResolve // ignore: cast_nullable_to_non_nullable
               as bool,
-      moduleConfig: freezed == moduleConfig
-          ? _value.moduleConfig
-          : moduleConfig // ignore: cast_nullable_to_non_nullable
-              as ModuleConfig?,
+      externalModuleConfig: freezed == externalModuleConfig
+          ? _value.externalModuleConfig
+          : externalModuleConfig // ignore: cast_nullable_to_non_nullable
+              as ExternalModuleConfig?,
       injectionModuleConfig: freezed == injectionModuleConfig
           ? _value.injectionModuleConfig
           : injectionModuleConfig // ignore: cast_nullable_to_non_nullable
@@ -174,18 +174,6 @@ class _$DependencyConfigCopyWithImpl<$Res, $Val extends DependencyConfig>
   $ImportableTypeCopyWith<$Res> get typeImplementation {
     return $ImportableTypeCopyWith<$Res>(_value.typeImplementation, (value) {
       return _then(_value.copyWith(typeImplementation: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $ModuleConfigCopyWith<$Res>? get moduleConfig {
-    if (_value.moduleConfig == null) {
-      return null;
-    }
-
-    return $ModuleConfigCopyWith<$Res>(_value.moduleConfig!, (value) {
-      return _then(_value.copyWith(moduleConfig: value) as $Val);
     });
   }
 
@@ -236,7 +224,7 @@ abstract class _$$_DependencyConfigCopyWith<$Res>
       String? constructorName,
       bool isAsync,
       bool preResolve,
-      ModuleConfig? moduleConfig,
+      ExternalModuleConfig? externalModuleConfig,
       InjectionModuleConfig? injectionModuleConfig,
       DisposeFunctionConfig? disposeFunctionConfig});
 
@@ -244,8 +232,6 @@ abstract class _$$_DependencyConfigCopyWith<$Res>
   $ImportableTypeCopyWith<$Res> get type;
   @override
   $ImportableTypeCopyWith<$Res> get typeImplementation;
-  @override
-  $ModuleConfigCopyWith<$Res>? get moduleConfig;
   @override
   $InjectionModuleConfigCopyWith<$Res>? get injectionModuleConfig;
   @override
@@ -274,7 +260,7 @@ class __$$_DependencyConfigCopyWithImpl<$Res>
     Object? constructorName = freezed,
     Object? isAsync = null,
     Object? preResolve = null,
-    Object? moduleConfig = freezed,
+    Object? externalModuleConfig = freezed,
     Object? injectionModuleConfig = freezed,
     Object? disposeFunctionConfig = freezed,
   }) {
@@ -323,10 +309,10 @@ class __$$_DependencyConfigCopyWithImpl<$Res>
           ? _value.preResolve
           : preResolve // ignore: cast_nullable_to_non_nullable
               as bool,
-      moduleConfig: freezed == moduleConfig
-          ? _value.moduleConfig
-          : moduleConfig // ignore: cast_nullable_to_non_nullable
-              as ModuleConfig?,
+      externalModuleConfig: freezed == externalModuleConfig
+          ? _value.externalModuleConfig
+          : externalModuleConfig // ignore: cast_nullable_to_non_nullable
+              as ExternalModuleConfig?,
       injectionModuleConfig: freezed == injectionModuleConfig
           ? _value.injectionModuleConfig
           : injectionModuleConfig // ignore: cast_nullable_to_non_nullable
@@ -354,7 +340,7 @@ class _$_DependencyConfig extends _DependencyConfig {
       this.constructorName,
       this.isAsync = false,
       this.preResolve = false,
-      this.moduleConfig,
+      this.externalModuleConfig,
       this.injectionModuleConfig,
       this.disposeFunctionConfig})
       : _dependencies = dependencies,
@@ -409,7 +395,7 @@ class _$_DependencyConfig extends _DependencyConfig {
   @JsonKey()
   final bool preResolve;
   @override
-  final ModuleConfig? moduleConfig;
+  final ExternalModuleConfig? externalModuleConfig;
   @override
   final InjectionModuleConfig? injectionModuleConfig;
   @override
@@ -417,7 +403,7 @@ class _$_DependencyConfig extends _DependencyConfig {
 
   @override
   String toString() {
-    return 'DependencyConfig(type: $type, typeImplementation: $typeImplementation, dependencyType: $dependencyType, dependencies: $dependencies, environments: $environments, dependsOn: $dependsOn, instanceName: $instanceName, signalsReady: $signalsReady, constructorName: $constructorName, isAsync: $isAsync, preResolve: $preResolve, moduleConfig: $moduleConfig, injectionModuleConfig: $injectionModuleConfig, disposeFunctionConfig: $disposeFunctionConfig)';
+    return 'DependencyConfig(type: $type, typeImplementation: $typeImplementation, dependencyType: $dependencyType, dependencies: $dependencies, environments: $environments, dependsOn: $dependsOn, instanceName: $instanceName, signalsReady: $signalsReady, constructorName: $constructorName, isAsync: $isAsync, preResolve: $preResolve, externalModuleConfig: $externalModuleConfig, injectionModuleConfig: $injectionModuleConfig, disposeFunctionConfig: $disposeFunctionConfig)';
   }
 
   @override
@@ -445,8 +431,8 @@ class _$_DependencyConfig extends _DependencyConfig {
             (identical(other.isAsync, isAsync) || other.isAsync == isAsync) &&
             (identical(other.preResolve, preResolve) ||
                 other.preResolve == preResolve) &&
-            (identical(other.moduleConfig, moduleConfig) ||
-                other.moduleConfig == moduleConfig) &&
+            (identical(other.externalModuleConfig, externalModuleConfig) ||
+                other.externalModuleConfig == externalModuleConfig) &&
             (identical(other.injectionModuleConfig, injectionModuleConfig) ||
                 other.injectionModuleConfig == injectionModuleConfig) &&
             (identical(other.disposeFunctionConfig, disposeFunctionConfig) ||
@@ -468,7 +454,7 @@ class _$_DependencyConfig extends _DependencyConfig {
       constructorName,
       isAsync,
       preResolve,
-      moduleConfig,
+      externalModuleConfig,
       injectionModuleConfig,
       disposeFunctionConfig);
 
@@ -499,7 +485,7 @@ abstract class _DependencyConfig extends DependencyConfig {
           final String? constructorName,
           final bool isAsync,
           final bool preResolve,
-          final ModuleConfig? moduleConfig,
+          final ExternalModuleConfig? externalModuleConfig,
           final InjectionModuleConfig? injectionModuleConfig,
           final DisposeFunctionConfig? disposeFunctionConfig}) =
       _$_DependencyConfig;
@@ -531,7 +517,7 @@ abstract class _DependencyConfig extends DependencyConfig {
   @override
   bool get preResolve;
   @override
-  ModuleConfig? get moduleConfig;
+  ExternalModuleConfig? get externalModuleConfig;
   @override
   InjectionModuleConfig? get injectionModuleConfig;
   @override

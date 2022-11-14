@@ -32,9 +32,10 @@ _$_DependencyConfig _$$_DependencyConfigFromJson(Map<String, dynamic> json) =>
       constructorName: json['constructorName'] as String?,
       isAsync: json['isAsync'] as bool? ?? false,
       preResolve: json['preResolve'] as bool? ?? false,
-      moduleConfig: json['moduleConfig'] == null
+      externalModuleConfig: json['externalModuleConfig'] == null
           ? null
-          : ModuleConfig.fromJson(json['moduleConfig'] as Map<String, dynamic>),
+          : ExternalModuleConfig.fromJson(
+              json['externalModuleConfig'] as Map<String, dynamic>),
       injectionModuleConfig: json['injectionModuleConfig'] == null
           ? null
           : InjectionModuleConfig.fromJson(
@@ -58,7 +59,7 @@ Map<String, dynamic> _$$_DependencyConfigToJson(_$_DependencyConfig instance) =>
       'constructorName': instance.constructorName,
       'isAsync': instance.isAsync,
       'preResolve': instance.preResolve,
-      'moduleConfig': instance.moduleConfig,
+      'externalModuleConfig': instance.externalModuleConfig,
       'injectionModuleConfig': instance.injectionModuleConfig,
       'disposeFunctionConfig': instance.disposeFunctionConfig,
     };

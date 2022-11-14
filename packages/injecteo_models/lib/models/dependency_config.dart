@@ -5,7 +5,7 @@ import 'dispose_function_config.dart';
 import 'importable_type.dart';
 import 'injected_dependency.dart';
 import 'injection_module_config.dart';
-import 'module_config.dart';
+import 'external_module_config.dart';
 
 part 'dependency_config.freezed.dart';
 part 'dependency_config.g.dart';
@@ -24,7 +24,7 @@ class DependencyConfig with _$DependencyConfig {
     String? constructorName,
     @Default(false) bool isAsync,
     @Default(false) bool preResolve,
-    ModuleConfig? moduleConfig,
+    ExternalModuleConfig? externalModuleConfig,
     InjectionModuleConfig? injectionModuleConfig,
     DisposeFunctionConfig? disposeFunctionConfig,
   }) = _DependencyConfig;
@@ -34,7 +34,7 @@ class DependencyConfig with _$DependencyConfig {
   factory DependencyConfig.fromJson(Map<String, Object?> json) =>
       _$DependencyConfigFromJson(json);
 
-  bool get isFromModule => moduleConfig != null;
+  bool get isFromExternalModule => externalModuleConfig != null;
   bool get isFromInjectionModule => injectionModuleConfig != null;
 
   List<InjectedDependency> get positionalDependencies =>
