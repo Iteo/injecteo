@@ -399,18 +399,8 @@ class LibraryGenerator {
           'preResolve': literalBool(true),
         if (dependencyConfig.disposeFunctionConfig != null)
           'dispose': _getDisposeFunctionAssignment(
-              dependencyConfig.disposeFunctionConfig!),
-        if (dependencyConfig.dependsOn.isNotEmpty)
-          'dependsOn': literalList(
-            dependencyConfig.dependsOn.map(
-              (e) => typeRefer(
-                e,
-                _targetFile,
-              ),
-            ),
+            dependencyConfig.disposeFunctionConfig!,
           ),
-        if (dependencyConfig.signalsReady != null)
-          'signalsReady': literalBool(dependencyConfig.signalsReady!),
       },
       [
         typeRefer(
@@ -520,8 +510,9 @@ class LibraryGenerator {
       return Method(
         (b) => b
           ..requiredParameters.add(Parameter((b) => b.name = 'i'))
-          ..body =
-              refer('i').property(disposeFunctionConfig.name).call([]).code,
+          ..body = refer('i').property(disposeFunctionConfig.name).call(
+            [],
+          ).code,
       ).closure;
     } else {
       return typeRefer(

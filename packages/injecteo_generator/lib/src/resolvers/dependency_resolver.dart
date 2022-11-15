@@ -16,7 +16,6 @@ class DependencyResolver {
   late ImportableType _typeImplementation;
 
   final List<InjectedDependency> _dependencies = [];
-  final List<ImportableType> _dependsOn = [];
 
   late final InjectionModuleConfig _injectionModuleConfig;
 
@@ -25,7 +24,6 @@ class DependencyResolver {
   bool _isAsync = false;
 
   List<String> _environments = [];
-  bool? _signalsReady;
 
   String? _instanceName;
   String? _constructorName;
@@ -176,21 +174,8 @@ class DependencyResolver {
             annotation.peek('dispose')?.objectValue.toFunctionValue();
       } else if (annotation.instanceOf(singletonChecker)) {
         _dependencyType = DependencyType.singleton;
-        _signalsReady = annotation.peek('signalsReady')?.boolValue;
         disposeFuncFromAnnotation =
             annotation.peek('dispose')?.objectValue.toFunctionValue();
-        final dependsOn = annotation
-            .peek('dependsOn')
-            ?.listValue
-            .map((type) => type.toTypeValue())
-            .where((v) => v != null)
-            .map<ImportableType>(
-              (dartType) => _typeResolver.resolveType(dartType!),
-            )
-            .toList();
-        if (dependsOn != null) {
-          _dependsOn.addAll(dependsOn);
-        }
       }
       abstractType = annotation.peek('as')?.typeValue;
       inlineEnv = annotation
@@ -340,9 +325,7 @@ class DependencyResolver {
       injectionModuleConfig: _injectionModuleConfig,
       dependencyType: _dependencyType,
       dependencies: _dependencies,
-      dependsOn: _dependsOn,
       environments: _environments,
-      signalsReady: _signalsReady,
       preResolve: _preResolve,
       instanceName: _instanceName,
       externalModuleConfig: _externalModuleConfig,
