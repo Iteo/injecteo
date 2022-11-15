@@ -1,7 +1,9 @@
+import 'package:di_example/core/di/injection_modules.dart';
 import 'package:injecteo_annotation/injecteo_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 @inject
+@counterInjectionModule
 class CounterDataSource {
   CounterDataSource(this._sharedPreferences);
 

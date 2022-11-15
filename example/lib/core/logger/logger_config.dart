@@ -1,4 +1,4 @@
-import 'package:di_example/core/di/logger_injection_module.dart';
+import 'package:di_example/core/di/injection_modules.dart';
 import 'package:fimber/fimber.dart';
 import 'package:injecteo_annotation/injecteo_annotation.dart';
 
@@ -14,5 +14,8 @@ abstract class LoggerConfig {
   LogTree get testLogTree => _debugTree;
 
   @prod
-  LogTree get prodLogTree => _debugTree;
+  LogTree get prodLogTree => DebugTree(
+        useColors: true,
+        logLevels: ["W", "E"],
+      );
 }
