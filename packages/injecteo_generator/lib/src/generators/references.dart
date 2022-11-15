@@ -24,3 +24,7 @@ const getDependencyMethodName = '$slInstanceName.get';
 const baseInjectionModuleTypeReference =
     Reference('BaseInjectionModule', injecteoImport);
 const registerDependenciesFuncName = 'registerDependencies';
+
+const environmentParameter = 'environment';
+const environmentFilterParameter = 'environmentFilter';
+const environmentFilterTypeName = 'EnvironmentFilter';

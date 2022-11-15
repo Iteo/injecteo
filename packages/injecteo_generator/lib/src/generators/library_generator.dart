@@ -121,7 +121,7 @@ class LibraryGenerator {
             Parameter(
               (b) => b
                 ..named = true
-                ..name = 'environment'
+                ..name = environmentParameter
                 ..type = TypeReference(
                   (b) => b
                     ..symbol = 'String'
@@ -131,10 +131,10 @@ class LibraryGenerator {
             Parameter(
               (b) => b
                 ..named = true
-                ..name = 'environmentFilter'
+                ..name = environmentFilterParameter
                 ..type = TypeReference(
                   (b) => b
-                    ..symbol = 'EnvironmentFilter'
+                    ..symbol = environmentFilterTypeName
                     ..url = injecteoImport
                     ..isNullable = true,
                 ),
@@ -154,6 +154,11 @@ class LibraryGenerator {
                       [
                         refer(slInstanceName),
                       ],
+                      {
+                        environmentParameter: refer(environmentParameter),
+                        environmentFilterParameter:
+                            refer(environmentFilterParameter),
+                      },
                     );
                 return moduleContainsPreResolvedDeps
                     ? expression.awaited.statement
@@ -266,6 +271,31 @@ class LibraryGenerator {
                     )
                   ],
                 )
+                ..optionalParameters.addAll(
+                  [
+                    Parameter(
+                      (b) => b
+                        ..named = true
+                        ..name = environmentParameter
+                        ..type = TypeReference(
+                          (b) => b
+                            ..symbol = 'String'
+                            ..isNullable = true,
+                        ),
+                    ),
+                    Parameter(
+                      (b) => b
+                        ..named = true
+                        ..name = environmentFilterParameter
+                        ..type = TypeReference(
+                          (b) => b
+                            ..symbol = environmentFilterTypeName
+                            ..url = injecteoImport
+                            ..isNullable = true,
+                        ),
+                    )
+                  ],
+                )
                 ..body = _buildRegisterFunctions(
                   dependencyConfigs: dependencyConfigs.toSet(),
                 ),
@@ -290,8 +320,8 @@ class LibraryGenerator {
         .newInstance(
           [
             refer(slInstanceName),
-            // refer('environment'),
-            // refer('environmentFilter'),
+            refer(environmentParameter),
+            refer(environmentFilterParameter),
           ],
         )
         .assignFinal(slHelperInstanceName)

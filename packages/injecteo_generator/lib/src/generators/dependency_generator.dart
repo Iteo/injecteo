@@ -28,7 +28,7 @@ class InjecteoDependencyGenerator implements Generator {
 
     for (final c in classes) {
       if (externalModuleChecker.hasAnnotationOfExact(c) ||
-          injectionModuleChecker.hasAnnotationOf(c) ||
+          (injectionModuleChecker.hasAnnotationOf(c) && !c.isAbstract) ||
           injectChecker.hasAnnotationOf(c)) {
         final dependencyConfig = DependencyResolver(typeResolver).resolve(c);
         allDepsInStep.addAll(dependencyConfig);
