@@ -1,5 +1,4 @@
 import 'package:injecteo/injecteo.dart';
-import 'package:injecteo_annotation/injecteo_annotation.dart';
 
 import 'di.config.dart';
 

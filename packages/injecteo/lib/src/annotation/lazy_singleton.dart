@@ -1,4 +1,4 @@
-import 'package:injecteo_annotation/src/inject.dart';
+import 'package:injecteo/src/annotation/inject.dart';
 
 /// Annotated class will generate registerLazySingleton function
 ///

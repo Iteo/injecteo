@@ -303,13 +303,6 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
-  injecteo_annotation:
-    dependency: "direct main"
-    description:
-      path: "../packages/injecteo_annotation"
-      relative: true
-    source: path
-    version: "0.0.1"
   injecteo_generator:
     dependency: "direct dev"
     description:

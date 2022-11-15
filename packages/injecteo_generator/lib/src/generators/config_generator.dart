@@ -5,7 +5,7 @@ import 'package:build/build.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:glob/glob.dart';
-import 'package:injecteo_annotation/injecteo_annotation.dart';
+import 'package:injecteo/injecteo.dart';
 import 'package:injecteo_models/injecteo_models.dart';
 import 'package:source_gen/source_gen.dart';
 

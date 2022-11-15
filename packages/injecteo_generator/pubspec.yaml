@@ -17,8 +17,6 @@ dependencies:
 
   injecteo:
     path: ../injecteo
-  injecteo_annotation:
-    path: ../injecteo_annotation
   injecteo_models:
     path: ../injecteo_models
 

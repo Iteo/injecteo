@@ -2,7 +2,7 @@ import 'package:di_example/core/di/injection_modules.dart';
 import 'package:di_example/core/logger/logger.dart';
 import 'package:di_example/data/counter/counter_data_source.dart';
 import 'package:di_example/domain/counter/counter_repository.dart';
-import 'package:injecteo_annotation/injecteo_annotation.dart';
+import 'package:injecteo/injecteo.dart';
 
 @counterInjectionModule
 @Singleton(as: CounterRepository<int>)

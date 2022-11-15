@@ -1,4 +1,4 @@
-import 'package:injecteo_annotation/injecteo_annotation.dart';
+import 'package:injecteo/injecteo.dart';
 
 const helloInjectionModule = InjectionModule(name: 'HelloInjectionModule');
 const loggerInjectionModule = InjectionModule(name: 'LoggerInjectionModule');

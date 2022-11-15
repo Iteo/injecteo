@@ -1,4 +1,4 @@
-import 'package:injecteo_annotation/injecteo_annotation.dart';
+import 'package:injecteo/injecteo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 @externalModule

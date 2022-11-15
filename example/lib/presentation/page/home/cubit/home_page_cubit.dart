@@ -2,7 +2,7 @@ import 'package:di_example/presentation/page/home/cubit/home_page_state.f.dart';
 import 'package:di_example/use_case/counter/get_counter_value_use_case.dart';
 import 'package:di_example/use_case/counter/increment_counter_use_case.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:injecteo_annotation/injecteo_annotation.dart';
+import 'package:injecteo/injecteo.dart';
 
 @inject
 class HomePageCubit extends Cubit<HomePageState> {
