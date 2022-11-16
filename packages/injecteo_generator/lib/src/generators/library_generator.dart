@@ -46,7 +46,7 @@ class LibraryGenerator {
         .toSet();
 
     final externalModuleClasses = externalModuleConfigs.map(
-      (config) => _buildExternalModuleClass(
+      (config) => buildExternalModuleClass(
         externalModuleConfig: config,
         dependencyConfigs: _sortedDependencies
             .where((e) => e.externalModuleConfig == config)
@@ -63,7 +63,7 @@ class LibraryGenerator {
 
     final injectionModuleClasses = injectionModuleWithDependencies.entries
         .map(
-          (entry) => _buildInjectionModuleClass(
+          (entry) => buildInjectionModuleClass(
             injectionModuleConfig: entry.key,
             dependencyConfigs: entry.value,
           ),
@@ -75,7 +75,7 @@ class LibraryGenerator {
         ..body.addAll(
           [
             ...environmentFields,
-            _buildConfigFunction(injectionModuleWithDependencies),
+            buildConfigFunction(injectionModuleWithDependencies),
             ...injectionModuleClasses,
             ...externalModuleClasses
           ],
@@ -83,11 +83,12 @@ class LibraryGenerator {
     );
   }
 
-  Spec _buildConfigFunction(
+  Spec buildConfigFunction(
     Map<InjectionModuleConfig, Iterable<DependencyConfig>>
         injectionModulesWithDependencies,
   ) {
     final hasPreResolvedDeps = hasPreResolvedDependencies(_sortedDependencies);
+
     final intiMethod = Method(
       (b) => b
         ..docs.addAll(
@@ -172,7 +173,7 @@ class LibraryGenerator {
     return intiMethod;
   }
 
-  Class _buildExternalModuleClass({
+  Class buildExternalModuleClass({
     required ExternalModuleConfig externalModuleConfig,
     required Set<DependencyConfig> dependencyConfigs,
   }) {
@@ -222,7 +223,7 @@ class LibraryGenerator {
                 ..type = dep.externalModuleConfig!.isMethod
                     ? null
                     : MethodType.getter
-                ..body = _registerFunctionBody(
+                ..body = registerFunctionBody(
                   dependencyConfig: dep,
                   dependencyConfigs: dependencyConfigs,
                   instanceForModule: true,
@@ -234,7 +235,7 @@ class LibraryGenerator {
     );
   }
 
-  Class _buildInjectionModuleClass({
+  Class buildInjectionModuleClass({
     required InjectionModuleConfig injectionModuleConfig,
     required Iterable<DependencyConfig> dependencyConfigs,
   }) {
@@ -296,7 +297,7 @@ class LibraryGenerator {
                     )
                   ],
                 )
-                ..body = _buildRegisterFunctions(
+                ..body = buildRegisterFunctions(
                   dependencyConfigs: dependencyConfigs.toSet(),
                 ),
             ),
@@ -308,7 +309,7 @@ class LibraryGenerator {
     return c;
   }
 
-  Block _buildRegisterFunctions({
+  Block buildRegisterFunctions({
     required Set<DependencyConfig> dependencyConfigs,
   }) {
     final externalModuleConfigs = dependencyConfigs
@@ -333,8 +334,10 @@ class LibraryGenerator {
             .call(
               [
                 if (moduleHasOverrides(
-                  dependencyConfigs.where((dependency) =>
-                      dependency.externalModuleConfig == moduleConfig),
+                  dependencyConfigs.where(
+                    (dependency) =>
+                        dependency.externalModuleConfig == moduleConfig,
+                  ),
                 ))
                   refer(slInstanceName)
               ],
@@ -345,7 +348,7 @@ class LibraryGenerator {
     );
 
     final registerFunctionsCode = dependencyConfigs.map(
-      (dep) => _buildRegisterFunction(
+      (dep) => buildRegisterFunction(
         dependencyConfig: dep,
         dependencyConfigs: dependencyConfigs,
       ),
@@ -362,14 +365,14 @@ class LibraryGenerator {
     );
   }
 
-  Code _buildRegisterFunction({
+  Code buildRegisterFunction({
     required DependencyConfig dependencyConfig,
     required Set<DependencyConfig> dependencyConfigs,
   }) {
     final asyncOrPreResolve = dependencyConfig.preResolve ||
         hasAsyncDependency(dependencyConfig, dependencyConfigs);
 
-    final registerFuncName = _getRegisterFunctionName(
+    final registerFuncName = getRegisterFunctionName(
       dependencyConfig: dependencyConfig,
       isAsync: asyncOrPreResolve,
     );
@@ -381,7 +384,7 @@ class LibraryGenerator {
           (b) => b
             ..lambda = true
             ..modifier = asyncOrPreResolve ? MethodModifier.async : null
-            ..body = _registerFunctionBody(
+            ..body = registerFunctionBody(
               dependencyConfig: dependencyConfig,
               dependencyConfigs: dependencyConfigs,
               instanceForModule: dependencyConfig.isFromExternalModule,
@@ -398,7 +401,7 @@ class LibraryGenerator {
         if (dependencyConfig.preResolve == true)
           'preResolve': literalBool(true),
         if (dependencyConfig.disposeFunctionConfig != null)
-          'dispose': _getDisposeFunctionAssignment(
+          'dispose': getDisposeFunctionAssignment(
             dependencyConfig.disposeFunctionConfig!,
           ),
       },
@@ -415,7 +418,7 @@ class LibraryGenerator {
         : registerExpression.statement;
   }
 
-  String _getRegisterFunctionName({
+  String getRegisterFunctionName({
     required DependencyConfig dependencyConfig,
     required bool isAsync,
   }) {
@@ -437,13 +440,13 @@ class LibraryGenerator {
     );
   }
 
-  Expression _registerFunctionBody({
+  Expression registerFunctionBody({
     required DependencyConfig dependencyConfig,
     required Set<DependencyConfig> dependencyConfigs,
     required bool instanceForModule,
   }) {
     final positionalParams = dependencyConfig.positionalDependencies.map(
-      (injectedDependency) => _createGetDependencyExpression(
+      (injectedDependency) => createGetDependencyExpression(
         injectedDependency: injectedDependency,
         isAsync: isAsyncOrHasAsyncDependency(
           injectedDependency,
@@ -455,7 +458,7 @@ class LibraryGenerator {
       dependencyConfig.namedDependencies.map(
         (injectedDependency) => MapEntry(
           injectedDependency.paramName,
-          _createGetDependencyExpression(
+          createGetDependencyExpression(
             injectedDependency: injectedDependency,
             isAsync: isAsyncOrHasAsyncDependency(
               injectedDependency,
@@ -503,7 +506,7 @@ class LibraryGenerator {
     }
   }
 
-  Expression _getDisposeFunctionAssignment(
+  Expression getDisposeFunctionAssignment(
     DisposeFunctionConfig disposeFunctionConfig,
   ) {
     if (disposeFunctionConfig.isInstance) {
@@ -522,7 +525,7 @@ class LibraryGenerator {
     }
   }
 
-  Expression _createGetDependencyExpression({
+  Expression createGetDependencyExpression({
     required InjectedDependency injectedDependency,
     required bool isAsync,
   }) {
