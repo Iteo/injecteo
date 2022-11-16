@@ -1,0 +1,32 @@
+// ignore_for_file: unnecessary_lambdas
+// ignore_for_file: lines_longer_than_80_chars
+///
+/// configure registration of provided dependencies
+void configureInjecteo(
+  ServiceLocator serviceLocator, {
+  String? environment,
+  EnvironmentFilter? environmentFilter,
+}) {
+  DemoInjectionModule().registerDependencies(
+    serviceLocator,
+    environment: environment,
+    environmentFilter: environmentFilter,
+  );
+}
+
+class DemoInjectionModule extends BaseInjectionModule {
+  @override
+  void registerDependencies(
+    ServiceLocator serviceLocator, {
+    String? environment,
+    EnvironmentFilter? environmentFilter,
+  }) {
+    final serviceLocatorHelper = ServiceLocatorHelper(
+      serviceLocator,
+      environment,
+      environmentFilter,
+    );
+    serviceLocatorHelper
+        .registerSingleton<DemoSingleton>(() => DemoSingleton());
+  }
+}

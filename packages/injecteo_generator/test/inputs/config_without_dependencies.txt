@@ -1,0 +1,9 @@
+// ignore_for_file: unnecessary_lambdas
+// ignore_for_file: lines_longer_than_80_chars
+///
+/// configure registration of provided dependencies
+void configureInjecteo(
+  ServiceLocator serviceLocator, {
+  String? environment,
+  EnvironmentFilter? environmentFilter,
+}) {}
