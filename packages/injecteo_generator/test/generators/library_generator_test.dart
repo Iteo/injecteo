@@ -1,25 +1,12 @@
-import 'dart:io' as io;
-
 import 'package:injecteo_models/injecteo_models.dart';
-import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 
-import '../utils/checksum.dart';
+import '../utils/file_utils.dart';
 import '../utils/library_generator_utils.dart';
 
 void main() {
-  String readFile(String fileNameAndExtension) {
-    final path = p.join('test', 'inputs', fileNameAndExtension);
-    final file = io.File(path);
-    return file.readAsStringSync();
-  }
-
-  void checkGeneratedCode(String code, String fileNameAndExtension) {
-    final codeChecksum = generateMd5(code);
-
-    final fileContent = readFile(fileNameAndExtension);
-    final fileChecksum = generateMd5(fileContent);
-    expect(codeChecksum, fileChecksum);
+  void expectChecksumEquals(String first, String second) {
+    expect(generateMd5(first), generateMd5(second));
   }
 
   group(
@@ -31,7 +18,12 @@ void main() {
           final code = TestUtils().runLibraryGenerator(
             [],
           );
-          checkGeneratedCode(code, "config_without_dependencies.txt");
+          expectChecksumEquals(
+            code,
+            readFile(
+              ['test', 'inputs', 'config', 'config_without_dependencies.txt'],
+            ),
+          );
         },
       );
 
@@ -54,7 +46,12 @@ void main() {
               )
             ],
           );
-          checkGeneratedCode(code, "config_with_dependency.txt");
+          expectChecksumEquals(
+            code,
+            readFile(
+              ['test', 'inputs', 'config', 'config_with_dependency.txt'],
+            ),
+          );
         },
       );
     },
