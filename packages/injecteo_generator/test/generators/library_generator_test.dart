@@ -21,7 +21,7 @@ void main() {
           expectChecksumEquals(
             code,
             readFile(
-              ['test', 'inputs', 'config', 'config_without_dependencies.txt'],
+              ['test', 'outputs', 'config', 'config_without_dependencies.txt'],
             ),
           );
         },
@@ -49,7 +49,7 @@ void main() {
           expectChecksumEquals(
             code,
             readFile(
-              ['test', 'inputs', 'config', 'config_with_dependency.txt'],
+              ['test', 'outputs', 'config', 'config_with_dependency.txt'],
             ),
           );
         },
