@@ -24,9 +24,8 @@ class InjecteoDependencyGenerator implements Generator {
     final allDepsInStep = <DependencyConfig>[];
     final libs = await buildStep.resolver.libraries.toList();
     final typeResolver = ImportableTypeResolverImpl(libs);
-    final classes = library.classes;
 
-    for (final c in classes) {
+    for (final c in library.classes) {
       if (externalModuleChecker.hasAnnotationOfExact(c) ||
           (injectionModuleChecker.hasAnnotationOf(c) && !c.isAbstract) ||
           injectChecker.hasAnnotationOf(c)) {
