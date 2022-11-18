@@ -29,6 +29,67 @@ void main() {
       );
 
       test(
+        "Singleton with dispose method",
+        () {
+          expect(
+            runBuildRegisterFunction(
+              const DependencyConfig(
+                dependencyType: DependencyType.singleton,
+                type: ImportableType(name: 'Demo'),
+                typeImplementation: ImportableType(name: 'Demo'),
+                injectionModuleConfig: injectionModuleConfig,
+                disposeFunctionConfig: DisposeFunctionConfig(
+                  isInstance: true,
+                  name: "dispose",
+                ),
+              ),
+            ),
+            'serviceLocatorHelper.registerSingleton<Demo>(() => Demo(), dispose: (i) => i.dispose(), );',
+          );
+        },
+      );
+
+      test(
+        "Singleton with external dispose method",
+        () {
+          expect(
+            runBuildRegisterFunction(
+              const DependencyConfig(
+                dependencyType: DependencyType.singleton,
+                type: ImportableType(name: 'Demo'),
+                typeImplementation: ImportableType(name: 'Demo'),
+                injectionModuleConfig: injectionModuleConfig,
+                disposeFunctionConfig: DisposeFunctionConfig(
+                  isInstance: false,
+                  name: "disposeCallback",
+                  importableType: ImportableType(name: "disposeCallback"),
+                ),
+              ),
+            ),
+            'serviceLocatorHelper.registerSingleton<Demo>(() => Demo(), dispose: disposeCallback, );',
+          );
+        },
+      );
+
+      test(
+        "Register Singleton for environment",
+        () {
+          expect(
+            runBuildRegisterFunction(
+              const DependencyConfig(
+                dependencyType: DependencyType.singleton,
+                type: ImportableType(name: 'Demo'),
+                typeImplementation: ImportableType(name: 'Demo'),
+                injectionModuleConfig: injectionModuleConfig,
+                environments: ['dev'],
+              ),
+            ),
+            'serviceLocatorHelper.registerSingleton<Demo>(() => Demo(), registerFor: {_dev}, );',
+          );
+        },
+      );
+
+      test(
         "Abstract Singleton",
         () {
           expect(

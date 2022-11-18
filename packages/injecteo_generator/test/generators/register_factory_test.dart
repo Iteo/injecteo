@@ -46,6 +46,24 @@ void main() {
       );
 
       test(
+        "Register Factory for environment",
+        () {
+          expect(
+            runBuildRegisterFunction(
+              const DependencyConfig(
+                dependencyType: DependencyType.factory,
+                type: ImportableType(name: 'Demo'),
+                typeImplementation: ImportableType(name: 'Demo'),
+                injectionModuleConfig: injectionModuleConfig,
+                environments: ['dev'],
+              ),
+            ),
+            'serviceLocatorHelper.registerFactory<Demo>(() => Demo(), registerFor: {_dev}, );',
+          );
+        },
+      );
+
+      test(
         "Factory async",
         () {
           expect(
