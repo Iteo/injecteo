@@ -9,14 +9,18 @@ Future<void> main() async {
       test(
         'Simple factory test',
         () async {
-          await checkDependencyGeneratorBuilder('factory/simple_factory');
+          await checkDependencyGeneratorBuilder(
+            'factory/simple_factory',
+          );
         },
       );
 
       test(
         'Abstract factory test',
         () async {
-          await checkDependencyGeneratorBuilder('factory/abstract_factory');
+          await checkDependencyGeneratorBuilder(
+            'factory/abstract_factory',
+          );
         },
       );
 
@@ -24,14 +28,17 @@ Future<void> main() async {
         'Factory with dependency test',
         () async {
           await checkDependencyGeneratorBuilder(
-              'factory/factory_with_dependency');
+            'factory/factory_with_dependency',
+          );
         },
       );
 
       test(
         'Factory with env',
         () async {
-          await checkDependencyGeneratorBuilder('factory/factory_with_env');
+          await checkDependencyGeneratorBuilder(
+            'factory/factory_with_env',
+          );
         },
       );
 
@@ -39,7 +46,8 @@ Future<void> main() async {
         'Factory with factory method',
         () async {
           await checkDependencyGeneratorBuilder(
-              'factory/factory_with_factory_method');
+            'factory/factory_with_factory_method',
+          );
         },
       );
 
@@ -47,7 +55,8 @@ Future<void> main() async {
         'Named factory',
         () async {
           await checkDependencyGeneratorBuilder(
-              'factory/named_factory');
+            'factory/named_factory',
+          );
         },
       );
     },

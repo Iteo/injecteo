@@ -9,7 +9,9 @@ Future<void> main() async {
       test(
         'Simple singleton test',
         () async {
-          await checkDependencyGeneratorBuilder('singleton/simple_singleton');
+          await checkDependencyGeneratorBuilder(
+            'singleton/simple_singleton',
+          );
         },
       );
 

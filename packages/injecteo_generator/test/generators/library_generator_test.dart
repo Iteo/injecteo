@@ -15,7 +15,7 @@ void main() {
       test(
         'Initializer without dependencies',
         () {
-          final code = TestUtils().runLibraryGenerator(
+          final code = runLibraryGenerator(
             [],
           );
           expectChecksumEquals(
@@ -30,7 +30,7 @@ void main() {
       test(
         'Initializer with single dependency',
         () {
-          final code = TestUtils().runLibraryGenerator(
+          final code = runLibraryGenerator(
             [
               const DependencyConfig(
                 dependencyType: DependencyType.singleton,
