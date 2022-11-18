@@ -372,9 +372,12 @@ class LibraryGenerator {
     final asyncDependency =
         hasAsyncDependency(dependencyConfig, dependencyConfigs);
 
+    final isAsyncOrHasAsyncDependency =
+        dependencyConfig.isAsync || asyncDependency;
+
     final registerFuncName = getRegisterFunctionName(
       dependencyConfig: dependencyConfig,
-      isAsync: dependencyConfig.isAsync || asyncDependency,
+      isAsync: isAsyncOrHasAsyncDependency,
     );
 
     final registerExpression =
@@ -383,7 +386,8 @@ class LibraryGenerator {
         Method(
           (b) => b
             ..lambda = true
-            ..modifier = asyncDependency ? MethodModifier.async : null
+            ..modifier =
+                isAsyncOrHasAsyncDependency ? MethodModifier.async : null
             ..body = registerFunctionBody(
               dependencyConfig: dependencyConfig,
               dependencyConfigs: dependencyConfigs,
