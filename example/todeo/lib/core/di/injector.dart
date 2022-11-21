@@ -3,7 +3,6 @@ import 'package:todeo/core/app_env.dart';
 
 import 'injector.config.dart';
 
-// final getIt = GetIt.instance;
 final getIt = GetItServiceLocator.instance;
 
 const mock = Environment(AppEnv.testName);
