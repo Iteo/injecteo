@@ -1,0 +1,6 @@
+#include "Generated.xcconfig"
+
+FLUTTER_TARGET=lib/main_uat.dart
+ASSET_PREFIX=uat
+BUNDLE_NAME=Todeo UAT
+BUNDLE_DISPLAY_NAME=Todeo UAT
