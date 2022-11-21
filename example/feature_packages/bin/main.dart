@@ -6,8 +6,10 @@ void main() async {
   String env = 'dev';
   print(
       '''--- Register dependencies using InjectionModule classes exported from feature packages ----''');
-  print('''Pay attention, that counter feature depends on logger feature. 
-      Even if register order is different, package will work correctly, due to modifications in singleton registration method''');
+  print('''
+      Pay attention, that counter feature depends on logger feature. 
+      Even if register order is different, everything will work correctly. 
+      ''');
 
   for (final module in [
     CounterInjectionModule(),
