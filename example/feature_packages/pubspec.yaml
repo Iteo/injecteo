@@ -1,0 +1,19 @@
+name: feature_packages
+description: A sample command-line application with feature packages architecture
+version: 1.0.0
+publish_to: "none"
+
+environment:
+  sdk: ">=2.18.4 <3.0.0"
+
+dependencies:
+  injecteo:
+    path: ../../packages/injecteo
+  logger:
+    path: packages/logger
+  counter:
+    path: packages/counter
+
+dev_dependencies:
+  lints: ^2.0.0
+  test: ^1.16.0

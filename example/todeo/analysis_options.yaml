@@ -1,0 +1,15 @@
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    avoid_print: false
+    prefer_single_quotes: true
+
+analyzer:
+  exclude:
+    - lib/**.g.dart
+    - lib/**.inject.dart
+    - lib/**.inject.summary
+    - test/**.g.dart
+    - test/**.inject.dart
+

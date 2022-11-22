@@ -1,0 +1,28 @@
+{
+  "app": {
+    "title": "Todeo"
+  },
+  "app_bar": {
+    "title": "Todeo"
+  },
+  "main_page": {
+    "welcome": "Welcome to Todeo project",
+    "empty_list": "Your task list is empty"
+  },
+  "error": {
+    "something_is_wrong": "Something is wrong"
+  },
+  "task": {
+    "add_label": "Add task",
+    "update_label": "Update task",
+    "name_label": "Name",
+    "validation": {
+      "to_short": "Text is too short min 3 chars"
+    }
+  },
+  "operation": {
+    "add": "Add",
+    "update": "Update",
+    "delete": "Delete"
+  }
+}
