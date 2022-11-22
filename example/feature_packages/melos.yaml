@@ -1,0 +1,18 @@
+name: feature_packages
+
+packages:
+  - packages/**
+  - "*"
+
+scripts:
+  analyze:
+    run: melos exec dart analyze
+
+  get:
+    run: melos exec dart pub get
+
+  generate:
+    run: melos exec --depends-on="build_runner" dart run build_runner build  --delete-conflicting-outputs
+
+  test:
+    run: melos exec --dir-exists="test" dart test

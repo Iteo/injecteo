@@ -1,16 +1,19 @@
-# di_example
+# Example how to use injecteo in Flutter app
 
-A new Flutter project.
+## Description
+This example use injecteo as dependency injection engine.
 
-## Getting Started
+Injecteo scan the library files and generate `di.config.dart` file which contains several modules (Counter, Logger). 
 
-This project is a starting point for a Flutter application.
+Before app start, there is a  `configureDependencies` call with given environment to properly configure Service Locator. 
 
-A few resources to get you started if this is your first Flutter project:
+Then, app uses `ServiceLocator.get<T>` to provide you registered dependencies.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Run
+In order to run example, get packages, run build_runner (which triggers injecteo_generator to generate dependency injection config).
+After that, run sample application with selected environment
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+    flutter pub get
+    flutter pub run build_runner build --delete-conflicting-outputs 
+    flutter run -t lib/main_dev.dart
+
