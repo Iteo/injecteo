@@ -43,7 +43,8 @@ class TaskListPage extends HookWidget {
                     itemCount: state.taskList.length,
                     itemBuilder: (BuildContext context, int index) => TaskCard(
                       task: state.taskList[index],
-                      onChangeTaskStatus: (task) => cubit.changeTaskStatus(task),
+                      onChangeTaskStatus: (task) =>
+                          cubit.changeTaskStatus(task),
                     ),
                   )
                 : Center(

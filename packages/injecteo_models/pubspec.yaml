@@ -1,7 +1,10 @@
 name: injecteo_models
 description: Only for injecteo internal models generation
 version: 1.0.0
-publish_to: "none"
+repository: https://github.com/Iteo/injecteo
+issue_tracker: https://github.com/Iteo/injecteo/issues
+homepage: https://github.com/Iteo/injecteo
+documentation: https://github.com/Iteo/injecteo/blob/develop/packages/injecteo/README.md 
 
 environment:
   sdk: ">=2.18.2 <3.0.0"

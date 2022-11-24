@@ -17,7 +17,9 @@ class GetTaskListUseCase {
     final taskList = _taskRepository.getTaskList();
     _notificationRepository.cancelAllNotification();
     for (var task in taskList) {
-      if (task.dueDate != null && task.dueDate is DateTime && task.dueDate!.isAfter(DateTime.now())) {
+      if (task.dueDate != null &&
+          task.dueDate is DateTime &&
+          task.dueDate!.isAfter(DateTime.now())) {
         _notificationRepository.createNotification(
           'Check your tasks',
           'The task ${task.name} time will run out',
