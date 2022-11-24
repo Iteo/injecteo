@@ -214,24 +214,24 @@ packages:
   injecteo:
     dependency: "direct main"
     description:
-      path: "/Users/grzegorz.kozlowski/Dev/injecteo/injecteo/example/feature_packages/packages/logger/../../../../packages/injecteo"
-      relative: false
+      path: "../../../../packages/injecteo"
+      relative: true
     source: path
-    version: "0.0.1"
+    version: "1.0.0"
   injecteo_generator:
     dependency: "direct dev"
     description:
-      path: "/Users/grzegorz.kozlowski/Dev/injecteo/injecteo/example/feature_packages/packages/logger/../../../../packages/injecteo_generator"
-      relative: false
+      path: "../../../../packages/injecteo_generator"
+      relative: true
     source: path
-    version: "0.0.1"
+    version: "1.0.0"
   injecteo_models:
     dependency: transitive
     description:
       path: "../../../../packages/injecteo_models"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "1.0.0"
   io:
     dependency: transitive
     description:

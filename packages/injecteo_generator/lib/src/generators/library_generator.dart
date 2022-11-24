@@ -317,33 +317,38 @@ class LibraryGenerator {
         .map((e) => e.externalModuleConfig!)
         .toSet();
 
-    final environmentFilterCode = slHelperTypeReference
-        .newInstance(
-          [
-            refer(slInstanceName),
-            refer(environmentParameter),
-            refer(environmentFilterParameter),
-          ],
+    final serviceLocatorHelperInstanceCode = declareFinal(slHelperInstanceName)
+        .assign(
+          slHelperTypeReference.newInstance(
+            [
+              refer(slInstanceName),
+              refer(environmentParameter),
+              refer(environmentFilterParameter),
+            ],
+          ),
         )
-        .assignFinal(slHelperInstanceName)
         .statement;
 
     final externalModuleAssignmentsCode = externalModuleConfigs.map(
-      (moduleConfig) {
-        return refer('_\$${moduleConfig.type.name}')
-            .call(
-              [
-                if (moduleHasOverrides(
-                  dependencyConfigs.where(
-                    (dependency) =>
-                        dependency.externalModuleConfig == moduleConfig,
+      (externalModuleConfig) {
+        final externalModuleAssignmentCode =
+            declareFinal(toCamelCase(externalModuleConfig.type.name))
+                .assign(
+                  refer('_\$${externalModuleConfig.type.name}').call(
+                    [
+                      if (moduleHasOverrides(
+                        dependencyConfigs.where(
+                          (dependency) =>
+                              dependency.externalModuleConfig ==
+                              externalModuleConfig,
+                        ),
+                      ))
+                        refer(slInstanceName)
+                    ],
                   ),
-                ))
-                  refer(slInstanceName)
-              ],
-            )
-            .assignFinal(toCamelCase(moduleConfig.type.name))
-            .statement;
+                )
+                .statement;
+        return externalModuleAssignmentCode;
       },
     );
 
@@ -357,7 +362,7 @@ class LibraryGenerator {
     return Block(
       (b) => b.statements.addAll(
         [
-          environmentFilterCode,
+          serviceLocatorHelperInstanceCode,
           ...externalModuleAssignmentsCode,
           ...registerFunctionsCode,
         ],
