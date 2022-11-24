@@ -137,7 +137,9 @@ bool hasPreResolvedDependencies(Set<DependencyConfig> dependencyConfigs) {
 }
 
 bool moduleHasOverrides(Iterable<DependencyConfig> dependencyConfigs) {
-  return dependencyConfigs.where((d) => d.externalModuleConfig?.isAbstract == true).any(
+  return dependencyConfigs
+      .where((d) => d.externalModuleConfig?.isAbstract == true)
+      .any(
         (d) => d.dependencies.isNotEmpty == true,
       );
 }

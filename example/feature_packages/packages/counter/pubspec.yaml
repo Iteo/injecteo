@@ -7,14 +7,12 @@ environment:
   sdk: ">=2.18.4 <3.0.0"
 
 dependencies:
-  injecteo:
-    path: ../../../../packages/injecteo
+  injecteo: ^1.0.0
   logger:
     path: ../logger
 
 dev_dependencies:
   build_runner: ^2.3.2
-  injecteo_generator:
-    path: ../../../../packages/injecteo_generator
+  injecteo_generator: ^1.0.0
   lints: ^2.0.0
   test: ^1.16.0
