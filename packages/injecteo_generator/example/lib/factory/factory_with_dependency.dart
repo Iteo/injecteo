@@ -12,4 +12,8 @@ class FactoryWithDependency {
   FactoryWithDependency(this._helloFactory);
 
   final HelloFactory _helloFactory;
+
+  String hello() {
+    return _helloFactory.hello();
+  }
 }

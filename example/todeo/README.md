@@ -18,11 +18,11 @@
 
 `fvm flutter format . -l 120`
 
-### Run application with dev env
+### Run application with uat env
 
-`fvm flutter run -t lib/main_dev.dart --flavor=uat`
+`fvm flutter run -t lib/main_uat.dart --flavor=uat`
 
-`fvm flutter run -t lib/main_dev.dart --flavor=prod`
+`fvm flutter run -t lib/main_uat.dart --flavor=prod`
 
 ## Change app icon
 `1) Replace images in assets/icons/launcher_icon.png`

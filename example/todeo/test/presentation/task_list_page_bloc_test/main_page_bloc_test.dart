@@ -51,7 +51,8 @@ void main() {
       'load task list page and emit idle state',
       build: () {
         when(getTaskListUseCase()).thenAnswer((_) => taskList);
-        when(getTaskListChangeStreamUseCase()).thenAnswer((_) => const Stream.empty());
+        when(getTaskListChangeStreamUseCase())
+            .thenAnswer((_) => const Stream.empty());
 
         return cubit;
       },
@@ -61,6 +62,4 @@ void main() {
       ],
     );
   });
-
-  //TODO: Add more tests.
 }

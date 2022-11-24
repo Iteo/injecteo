@@ -28,12 +28,10 @@ mixin _$DependencyConfig {
   List<InjectedDependency> get dependencies =>
       throw _privateConstructorUsedError;
   List<String> get environments => throw _privateConstructorUsedError;
-  List<ImportableType> get dependsOn => throw _privateConstructorUsedError;
-  String? get instanceName => throw _privateConstructorUsedError;
-  bool? get signalsReady => throw _privateConstructorUsedError;
-  String? get constructorName => throw _privateConstructorUsedError;
   bool get isAsync => throw _privateConstructorUsedError;
   bool get preResolve => throw _privateConstructorUsedError;
+  String? get instanceName => throw _privateConstructorUsedError;
+  String? get constructorName => throw _privateConstructorUsedError;
   ExternalModuleConfig? get externalModuleConfig =>
       throw _privateConstructorUsedError;
   DisposeFunctionConfig? get disposeFunctionConfig =>
@@ -58,12 +56,10 @@ abstract class $DependencyConfigCopyWith<$Res> {
       DependencyType dependencyType,
       List<InjectedDependency> dependencies,
       List<String> environments,
-      List<ImportableType> dependsOn,
-      String? instanceName,
-      bool? signalsReady,
-      String? constructorName,
       bool isAsync,
       bool preResolve,
+      String? instanceName,
+      String? constructorName,
       ExternalModuleConfig? externalModuleConfig,
       DisposeFunctionConfig? disposeFunctionConfig});
 
@@ -92,12 +88,10 @@ class _$DependencyConfigCopyWithImpl<$Res, $Val extends DependencyConfig>
     Object? dependencyType = null,
     Object? dependencies = null,
     Object? environments = null,
-    Object? dependsOn = null,
-    Object? instanceName = freezed,
-    Object? signalsReady = freezed,
-    Object? constructorName = freezed,
     Object? isAsync = null,
     Object? preResolve = null,
+    Object? instanceName = freezed,
+    Object? constructorName = freezed,
     Object? externalModuleConfig = freezed,
     Object? disposeFunctionConfig = freezed,
   }) {
@@ -126,22 +120,6 @@ class _$DependencyConfigCopyWithImpl<$Res, $Val extends DependencyConfig>
           ? _value.environments
           : environments // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      dependsOn: null == dependsOn
-          ? _value.dependsOn
-          : dependsOn // ignore: cast_nullable_to_non_nullable
-              as List<ImportableType>,
-      instanceName: freezed == instanceName
-          ? _value.instanceName
-          : instanceName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      signalsReady: freezed == signalsReady
-          ? _value.signalsReady
-          : signalsReady // ignore: cast_nullable_to_non_nullable
-              as bool?,
-      constructorName: freezed == constructorName
-          ? _value.constructorName
-          : constructorName // ignore: cast_nullable_to_non_nullable
-              as String?,
       isAsync: null == isAsync
           ? _value.isAsync
           : isAsync // ignore: cast_nullable_to_non_nullable
@@ -150,6 +128,14 @@ class _$DependencyConfigCopyWithImpl<$Res, $Val extends DependencyConfig>
           ? _value.preResolve
           : preResolve // ignore: cast_nullable_to_non_nullable
               as bool,
+      instanceName: freezed == instanceName
+          ? _value.instanceName
+          : instanceName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      constructorName: freezed == constructorName
+          ? _value.constructorName
+          : constructorName // ignore: cast_nullable_to_non_nullable
+              as String?,
       externalModuleConfig: freezed == externalModuleConfig
           ? _value.externalModuleConfig
           : externalModuleConfig // ignore: cast_nullable_to_non_nullable
@@ -215,12 +201,10 @@ abstract class _$$_DependencyConfigCopyWith<$Res>
       DependencyType dependencyType,
       List<InjectedDependency> dependencies,
       List<String> environments,
-      List<ImportableType> dependsOn,
-      String? instanceName,
-      bool? signalsReady,
-      String? constructorName,
       bool isAsync,
       bool preResolve,
+      String? instanceName,
+      String? constructorName,
       ExternalModuleConfig? externalModuleConfig,
       DisposeFunctionConfig? disposeFunctionConfig});
 
@@ -251,12 +235,10 @@ class __$$_DependencyConfigCopyWithImpl<$Res>
     Object? dependencyType = null,
     Object? dependencies = null,
     Object? environments = null,
-    Object? dependsOn = null,
-    Object? instanceName = freezed,
-    Object? signalsReady = freezed,
-    Object? constructorName = freezed,
     Object? isAsync = null,
     Object? preResolve = null,
+    Object? instanceName = freezed,
+    Object? constructorName = freezed,
     Object? externalModuleConfig = freezed,
     Object? disposeFunctionConfig = freezed,
   }) {
@@ -285,22 +267,6 @@ class __$$_DependencyConfigCopyWithImpl<$Res>
           ? _value._environments
           : environments // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      dependsOn: null == dependsOn
-          ? _value._dependsOn
-          : dependsOn // ignore: cast_nullable_to_non_nullable
-              as List<ImportableType>,
-      instanceName: freezed == instanceName
-          ? _value.instanceName
-          : instanceName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      signalsReady: freezed == signalsReady
-          ? _value.signalsReady
-          : signalsReady // ignore: cast_nullable_to_non_nullable
-              as bool?,
-      constructorName: freezed == constructorName
-          ? _value.constructorName
-          : constructorName // ignore: cast_nullable_to_non_nullable
-              as String?,
       isAsync: null == isAsync
           ? _value.isAsync
           : isAsync // ignore: cast_nullable_to_non_nullable
@@ -309,6 +275,14 @@ class __$$_DependencyConfigCopyWithImpl<$Res>
           ? _value.preResolve
           : preResolve // ignore: cast_nullable_to_non_nullable
               as bool,
+      instanceName: freezed == instanceName
+          ? _value.instanceName
+          : instanceName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      constructorName: freezed == constructorName
+          ? _value.constructorName
+          : constructorName // ignore: cast_nullable_to_non_nullable
+              as String?,
       externalModuleConfig: freezed == externalModuleConfig
           ? _value.externalModuleConfig
           : externalModuleConfig // ignore: cast_nullable_to_non_nullable
@@ -331,17 +305,14 @@ class _$_DependencyConfig extends _DependencyConfig {
       this.dependencyType = DependencyType.factory,
       final List<InjectedDependency> dependencies = const [],
       final List<String> environments = const [],
-      final List<ImportableType> dependsOn = const [],
-      this.instanceName,
-      this.signalsReady,
-      this.constructorName,
       this.isAsync = false,
       this.preResolve = false,
+      this.instanceName,
+      this.constructorName,
       this.externalModuleConfig,
       this.disposeFunctionConfig})
       : _dependencies = dependencies,
         _environments = environments,
-        _dependsOn = dependsOn,
         super._();
 
   factory _$_DependencyConfig.fromJson(Map<String, dynamic> json) =>
@@ -372,20 +343,6 @@ class _$_DependencyConfig extends _DependencyConfig {
     return EqualUnmodifiableListView(_environments);
   }
 
-  final List<ImportableType> _dependsOn;
-  @override
-  @JsonKey()
-  List<ImportableType> get dependsOn {
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_dependsOn);
-  }
-
-  @override
-  final String? instanceName;
-  @override
-  final bool? signalsReady;
-  @override
-  final String? constructorName;
   @override
   @JsonKey()
   final bool isAsync;
@@ -393,13 +350,17 @@ class _$_DependencyConfig extends _DependencyConfig {
   @JsonKey()
   final bool preResolve;
   @override
+  final String? instanceName;
+  @override
+  final String? constructorName;
+  @override
   final ExternalModuleConfig? externalModuleConfig;
   @override
   final DisposeFunctionConfig? disposeFunctionConfig;
 
   @override
   String toString() {
-    return 'DependencyConfig(type: $type, typeImplementation: $typeImplementation, injectionModuleConfig: $injectionModuleConfig, dependencyType: $dependencyType, dependencies: $dependencies, environments: $environments, dependsOn: $dependsOn, instanceName: $instanceName, signalsReady: $signalsReady, constructorName: $constructorName, isAsync: $isAsync, preResolve: $preResolve, externalModuleConfig: $externalModuleConfig, disposeFunctionConfig: $disposeFunctionConfig)';
+    return 'DependencyConfig(type: $type, typeImplementation: $typeImplementation, injectionModuleConfig: $injectionModuleConfig, dependencyType: $dependencyType, dependencies: $dependencies, environments: $environments, isAsync: $isAsync, preResolve: $preResolve, instanceName: $instanceName, constructorName: $constructorName, externalModuleConfig: $externalModuleConfig, disposeFunctionConfig: $disposeFunctionConfig)';
   }
 
   @override
@@ -418,17 +379,13 @@ class _$_DependencyConfig extends _DependencyConfig {
                 .equals(other._dependencies, _dependencies) &&
             const DeepCollectionEquality()
                 .equals(other._environments, _environments) &&
-            const DeepCollectionEquality()
-                .equals(other._dependsOn, _dependsOn) &&
-            (identical(other.instanceName, instanceName) ||
-                other.instanceName == instanceName) &&
-            (identical(other.signalsReady, signalsReady) ||
-                other.signalsReady == signalsReady) &&
-            (identical(other.constructorName, constructorName) ||
-                other.constructorName == constructorName) &&
             (identical(other.isAsync, isAsync) || other.isAsync == isAsync) &&
             (identical(other.preResolve, preResolve) ||
                 other.preResolve == preResolve) &&
+            (identical(other.instanceName, instanceName) ||
+                other.instanceName == instanceName) &&
+            (identical(other.constructorName, constructorName) ||
+                other.constructorName == constructorName) &&
             (identical(other.externalModuleConfig, externalModuleConfig) ||
                 other.externalModuleConfig == externalModuleConfig) &&
             (identical(other.disposeFunctionConfig, disposeFunctionConfig) ||
@@ -445,12 +402,10 @@ class _$_DependencyConfig extends _DependencyConfig {
       dependencyType,
       const DeepCollectionEquality().hash(_dependencies),
       const DeepCollectionEquality().hash(_environments),
-      const DeepCollectionEquality().hash(_dependsOn),
-      instanceName,
-      signalsReady,
-      constructorName,
       isAsync,
       preResolve,
+      instanceName,
+      constructorName,
       externalModuleConfig,
       disposeFunctionConfig);
 
@@ -476,12 +431,10 @@ abstract class _DependencyConfig extends DependencyConfig {
           final DependencyType dependencyType,
           final List<InjectedDependency> dependencies,
           final List<String> environments,
-          final List<ImportableType> dependsOn,
-          final String? instanceName,
-          final bool? signalsReady,
-          final String? constructorName,
           final bool isAsync,
           final bool preResolve,
+          final String? instanceName,
+          final String? constructorName,
           final ExternalModuleConfig? externalModuleConfig,
           final DisposeFunctionConfig? disposeFunctionConfig}) =
       _$_DependencyConfig;
@@ -503,17 +456,13 @@ abstract class _DependencyConfig extends DependencyConfig {
   @override
   List<String> get environments;
   @override
-  List<ImportableType> get dependsOn;
-  @override
-  String? get instanceName;
-  @override
-  bool? get signalsReady;
-  @override
-  String? get constructorName;
-  @override
   bool get isAsync;
   @override
   bool get preResolve;
+  @override
+  String? get instanceName;
+  @override
+  String? get constructorName;
   @override
   ExternalModuleConfig? get externalModuleConfig;
   @override

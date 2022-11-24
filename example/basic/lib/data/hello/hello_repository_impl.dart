@@ -1,19 +1,33 @@
-import 'package:di_example/core/di/injection_modules.dart';
-import 'package:di_example/data/hello/hello_data_source.dart';
+import 'package:di_example/data/hello/hello_service.dart';
 import 'package:di_example/domain/hello/hello_repository.dart';
 import 'package:injecteo/injecteo.dart';
 
-@Singleton(as: HelloRepository)
-@helloInjectionModule
-class HelloRepositoryImpl implements HelloRepository {
-  HelloRepositoryImpl(
-    this._dataSource,
-  );
+@Named("impl1")
+@Inject(as: HelloService)
+class HelloServiceFirstImpl implements HelloService {
+  @override
+  String sayHello() {
+    return 'Hello from first implementation';
+  }
+}
 
-  final HelloDataSource _dataSource;
+@Named("impl2")
+@Inject(as: HelloService)
+class HelloServiceSecondImpl implements HelloService {
+  @override
+  String sayHello() {
+    return 'Hello from second implementation';
+  }
+}
+
+@Singleton(as: HelloRepository)
+class HelloRepositoryImpl implements HelloRepository {
+  HelloRepositoryImpl(@Named('impl1') this.helloService);
+
+  final HelloService helloService;
 
   @override
   Future<String> hello() async {
-    return _dataSource.hello();
+    return helloService.sayHello();
   }
 }

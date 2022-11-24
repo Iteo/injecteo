@@ -123,10 +123,10 @@ packages:
   injecteo:
     dependency: "direct main"
     description:
-      path: "/Users/grzegorz.kozlowski/Dev/injecteo/injecteo/example/feature_packages/../../packages/injecteo"
-      relative: false
+      path: "../../packages/injecteo"
+      relative: true
     source: path
-    version: "0.0.1"
+    version: "1.0.0"
   io:
     dependency: transitive
     description:
@@ -141,13 +141,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.4"
-  lints:
+  lint:
     dependency: "direct dev"
     description:
-      name: lints
+      name: lint
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "1.10.0"
   logger:
     dependency: "direct main"
     description:

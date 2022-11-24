@@ -33,7 +33,6 @@ class DependencyConfig with _$DependencyConfig {
       _$DependencyConfigFromJson(json);
 
   bool get isFromExternalModule => externalModuleConfig != null;
-  bool get isFromInjectionModule => injectionModuleConfig != null;
 
   List<InjectedDependency> get positionalDependencies =>
       dependencies.where((d) => d.isPositional).toList();
