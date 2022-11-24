@@ -1,7 +1,6 @@
 name: injecteo_generator
 description: A new Flutter package project.
-version: 1.0.0
-publish_to: "none"
+version: 1.0.1
 
 environment:
   sdk: ">=2.18.2 <3.0.0"
@@ -15,11 +14,8 @@ dependencies:
   freezed_annotation: ^2.2.0
   glob: ^2.1.0
 
-  injecteo:
-    path: ../injecteo
-  injecteo_models:
-    path: ../injecteo_models
-
+  injecteo: ^1.0.0
+  injecteo_models: ^1.0.0
   json_annotation: ^4.7.0
   meta: ^1.8.0
   path: ^1.8.2

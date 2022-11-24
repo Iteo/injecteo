@@ -1,0 +1,12 @@
+# melos_managed_dependency_overrides: counter,injecteo,injecteo_generator,injecteo_models,logger
+dependency_overrides:
+  counter:
+    path: packages/counter
+  injecteo:
+    path: ../../packages/injecteo
+  injecteo_generator:
+    path: ../../packages/injecteo_generator
+  injecteo_models:
+    path: ../../packages/injecteo_models
+  logger:
+    path: packages/logger

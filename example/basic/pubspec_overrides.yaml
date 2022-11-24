@@ -1,0 +1,8 @@
+# melos_managed_dependency_overrides: injecteo,injecteo_generator,injecteo_models
+dependency_overrides:
+  injecteo:
+    path: ../../packages/injecteo
+  injecteo_generator:
+    path: ../../packages/injecteo_generator
+  injecteo_models:
+    path: ../../packages/injecteo_models

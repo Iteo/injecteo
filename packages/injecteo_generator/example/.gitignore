@@ -9,3 +9,6 @@ build/
 # Ignore generated files
 *.config.dart
 *.injecteo.json
+
+# Melos-generated file
+pubspec_overrides.yaml

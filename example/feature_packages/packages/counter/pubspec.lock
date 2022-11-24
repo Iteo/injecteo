@@ -226,7 +226,7 @@ packages:
     source: path
     version: "1.0.0"
   injecteo_models:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       path: "../../../../packages/injecteo_models"
       relative: true

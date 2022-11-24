@@ -1,7 +1,6 @@
 name: di_example
 description: Example how to use injecteo in Flutter application
-
-publish_to: "none" # Remove this line if you wish to publish to pub.dev
+publish_to: "none"
 
 version: 1.0.0+1
 
@@ -11,8 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  injecteo:
-    path: ../../packages/injecteo
+  injecteo: ^1.0.0
   cupertino_icons: ^1.0.2
   freezed_annotation: ^2.2.0
   flutter_bloc: ^8.1.1
@@ -25,9 +23,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  injecteo_generator:
-    path: ../../packages/injecteo_generator
-
+  injecteo_generator: ^1.0.0
   flutter_lints: ^2.0.0
   freezed: ^2.2.0
   build_runner: ^2.3.2

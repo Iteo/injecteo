@@ -1,5 +1,12 @@
 name: injecteo
 
+command:
+  bootstrap:
+    usePubspecOverrides: true
+    runPubGetInParallel: false
+  version:
+    workspaceChangelog: true
+
 packages:
   - packages/**
 
@@ -13,5 +20,28 @@ scripts:
   generate:
     run: melos exec --depends-on="build_runner" dart run build_runner build  --delete-conflicting-outputs
 
+  format:
+    run: melos exec dart format . -l 80
+
   test:
-    run: melos exec --dir-exists="test" dart test
+    run: |
+      melos run test:dart && melos run gen_coverage
+    description: Run all tests
+
+  test:dart:
+    description: Run Dart test with coverage generate
+    run: |
+      melos exec \
+      --fail-fast \
+      -- \
+      dart pub global run coverage:test_with_coverage
+    select-package:
+      flutter: false
+      dir-exists:
+        - test
+
+  gen_coverage:
+    run: |
+      rm -rf coverage
+      melos exec -c 1 -- "\$MELOS_ROOT_PATH/scripts/combine_coverage.sh"
+      genhtml coverage/lcov.info -o coverage/html
