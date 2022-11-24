@@ -194,15 +194,6 @@ void runExternalModulesTestsFromExample() {
                     'package:example/external_module/named_module_fake.dart',
               ),
               externalModuleConfig: externalModuleConfig,
-              signalsReady: true,
-              dependsOn: const [
-                ImportableType(
-                  name: 'NetworkExternalModule',
-                  import: 'package:example/external_module/network_module.dart',
-                  isNullable: false,
-                  typeArguments: [],
-                ),
-              ],
               dependencies: const [
                 InjectedDependency(
                   type: ImportableType(
