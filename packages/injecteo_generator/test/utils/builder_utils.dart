@@ -11,8 +11,9 @@ Future<void> checkDependencyGeneratorBuilder(
   String outputExtension = 'injecteo.json',
   BuilderOptions options = BuilderOptions.empty,
 ]) async {
-  final File inputFile =
-      File('${Directory.current.path}/$inputDirectory/$fileName.dart');
+  final File inputFile = File(
+    '${Directory.current.path}/$inputDirectory/$fileName.dart',
+  );
   final File outputFile = File(
     '${Directory.current.path}/$outputDirectory/$fileName.$outputExtension',
   );

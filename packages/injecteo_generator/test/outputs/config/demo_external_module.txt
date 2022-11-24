@@ -1,0 +1,8 @@
+class _$DemoExternalModule extends DemoExternalModule {_$DemoExternalModule(this.serviceLocator);
+
+final ServiceLocator serviceLocator;
+
+@override Demo get DemoInitializer => demoExternalModule.DemoInitializer;
+@override DemoExternalModule get DemoInitializer => demoExternalModule.DemoInitializer;
+@override Storage get DemoInitializer => demoExternalModule.DemoInitializer;
+ }

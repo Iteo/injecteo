@@ -1,14 +1,19 @@
 import 'package:injecteo_models/injecteo_models.dart';
 import 'package:test/test.dart';
 
+import '../utils/builder_utils.dart';
+import '../utils/expect_checksum_equals.dart';
 import '../utils/file_utils.dart';
 import '../utils/library_generator_utils.dart';
 
-void main() {
-  void expectChecksumEquals(String first, String second) {
-    expect(generateMd5(first), generateMd5(second));
-  }
+part '../utils/external_module_variables.dart';
+part 'external_module_basic_tests_runner.dart';
+part 'external_module_from_example_tests_runner.dart';
+part 'external_module_io_tests_runner.dart';
+part 'injection_module_io_tests_runner.dart';
+part 'injection_module_tests_runner.dart';
 
+void main() {
   group(
     'Generate injecteo library',
     () {
@@ -56,4 +61,10 @@ void main() {
       );
     },
   );
+
+  runExternalModulesBasicTests();
+  runExternalModulesTestsFromExample();
+  runExternalModulesIoTests();
+  runInjectionModulesTests();
+  runInjectionModuleIoTests();
 }
