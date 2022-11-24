@@ -7,5 +7,3 @@ class Named {
 
   final String? name;
 }
-
-const named = Named('');

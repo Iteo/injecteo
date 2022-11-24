@@ -1,6 +1,6 @@
 name: injecteo
-description: Service locator for IoC pattern
-version: 0.0.1
+description: Service locator for IoC pattern. Export annotations and abstract classes used by injecteo_generator.
+version: 1.0.0
 
 environment:
   sdk: ">=2.18.2 <3.0.0"

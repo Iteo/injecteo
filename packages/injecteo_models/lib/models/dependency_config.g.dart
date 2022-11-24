@@ -25,15 +25,10 @@ _$_DependencyConfig _$$_DependencyConfigFromJson(Map<String, dynamic> json) =>
               ?.map((e) => e as String)
               .toList() ??
           const [],
-      dependsOn: (json['dependsOn'] as List<dynamic>?)
-              ?.map((e) => ImportableType.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
-      instanceName: json['instanceName'] as String?,
-      signalsReady: json['signalsReady'] as bool?,
-      constructorName: json['constructorName'] as String?,
       isAsync: json['isAsync'] as bool? ?? false,
       preResolve: json['preResolve'] as bool? ?? false,
+      instanceName: json['instanceName'] as String?,
+      constructorName: json['constructorName'] as String?,
       externalModuleConfig: json['externalModuleConfig'] == null
           ? null
           : ExternalModuleConfig.fromJson(
@@ -52,12 +47,10 @@ Map<String, dynamic> _$$_DependencyConfigToJson(_$_DependencyConfig instance) =>
       'dependencyType': _$DependencyTypeEnumMap[instance.dependencyType]!,
       'dependencies': instance.dependencies,
       'environments': instance.environments,
-      'dependsOn': instance.dependsOn,
-      'instanceName': instance.instanceName,
-      'signalsReady': instance.signalsReady,
-      'constructorName': instance.constructorName,
       'isAsync': instance.isAsync,
       'preResolve': instance.preResolve,
+      'instanceName': instance.instanceName,
+      'constructorName': instance.constructorName,
       'externalModuleConfig': instance.externalModuleConfig,
       'disposeFunctionConfig': instance.disposeFunctionConfig,
     };

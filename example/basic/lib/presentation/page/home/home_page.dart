@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooked_bloc/hooked_bloc.dart';
 
+import '../../widget/say_hello/say_hello.dart';
+
 class HomePage extends HookWidget {
   const HomePage({super.key});
 
@@ -11,13 +13,17 @@ class HomePage extends HookWidget {
     final cubit = useBloc<HomePageCubit>();
     final state = useBlocBuilder(cubit);
 
-    useEffect(() {
-      cubit.initialize();
-    }, []);
+    useEffect(
+      // ignore: body_might_complete_normally_nullable
+      () {
+        cubit.initialize();
+      },
+      [],
+    );
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('DI Example App'),
+        title: const SayHello(),
       ),
       body: Center(
         child: state.map(

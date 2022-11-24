@@ -1,4 +1,4 @@
-/// Marks a top-level function as an config function
+/// Marks a top-level function as a config function
 ///
 class InjecteoConfig {
   const InjecteoConfig({

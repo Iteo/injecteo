@@ -404,21 +404,21 @@ packages:
   injecteo:
     dependency: "direct main"
     description:
-      path: "../injecteo-dev/packages/injecteo"
+      path: "../../packages/injecteo"
       relative: true
     source: path
     version: "0.0.1"
   injecteo_generator:
     dependency: "direct dev"
     description:
-      path: "../injecteo-dev/packages/injecteo_generator"
+      path: "../../packages/injecteo_generator"
       relative: true
     source: path
     version: "0.0.1"
   injecteo_models:
     dependency: transitive
     description:
-      path: "../injecteo-dev/packages/injecteo_models"
+      path: "../../packages/injecteo_models"
       relative: true
     source: path
     version: "0.0.1"

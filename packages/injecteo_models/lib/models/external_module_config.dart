@@ -20,8 +20,8 @@ class ExternalModuleConfig {
     String? initializerName,
   }) {
     if ((isAbstract == null || identical(isAbstract, this.isAbstract)) &&
-        (isModuleMethod == null || identical(isModuleMethod, this.isMethod)) &&
-        (module == null || identical(module, this.type)) &&
+        (isModuleMethod == null || identical(isModuleMethod, isMethod)) &&
+        (module == null || identical(module, type)) &&
         (initializerName == null ||
             identical(initializerName, this.initializerName))) {
       return this;
@@ -29,15 +29,29 @@ class ExternalModuleConfig {
 
     return ExternalModuleConfig(
       isAbstract: isAbstract ?? this.isAbstract,
-      isMethod: isModuleMethod ?? this.isMethod,
-      type: module ?? this.type,
+      isMethod: isModuleMethod ?? isMethod,
+      type: module ?? type,
       initializerName: initializerName ?? this.initializerName,
     );
   }
 
-  @override
-  String toString() {
-    return 'ModuleConfig{isAbstract: $isAbstract, isModuleMethod: $isMethod, module: $type, initializerName: $initializerName}';
+  factory ExternalModuleConfig.fromJson(Map<String, dynamic> json) {
+    return ExternalModuleConfig(
+      isAbstract: json['isAbstract'] as bool,
+      isMethod: json['isMethod'] as bool,
+      type: ImportableType.fromJson(json['type'] as Map<String, dynamic>),
+      initializerName: json['initializerName'] as String,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    // ignore: unnecessary_cast
+    return {
+      'isAbstract': isAbstract,
+      'isMethod': isMethod,
+      'type': type,
+      'initializerName': initializerName,
+    } as Map<String, dynamic>;
   }
 
   @override
@@ -50,22 +64,8 @@ class ExternalModuleConfig {
   @override
   int get hashCode => type.hashCode;
 
-  factory ExternalModuleConfig.fromJson(Map<String, dynamic> json) {
-    return ExternalModuleConfig(
-      isAbstract: json['isAbstract'] as bool,
-      isMethod: json['isMethod'] as bool,
-      type: ImportableType.fromJson(json['type']),
-      initializerName: json['initializerName'] as String,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    // ignore: unnecessary_cast
-    return {
-      'isAbstract': this.isAbstract,
-      'isMethod': this.isMethod,
-      'type': this.type,
-      'initializerName': this.initializerName,
-    } as Map<String, dynamic>;
+  @override
+  String toString() {
+    return 'ModuleConfig{isAbstract: $isAbstract, isModuleMethod: $isMethod, module: $type, initializerName: $initializerName}';
   }
 }
