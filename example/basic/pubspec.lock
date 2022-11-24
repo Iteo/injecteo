@@ -302,21 +302,21 @@ packages:
       path: "../../packages/injecteo"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "1.0.0"
   injecteo_generator:
     dependency: "direct dev"
     description:
       path: "../../packages/injecteo_generator"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "1.0.0"
   injecteo_models:
     dependency: transitive
     description:
       path: "../../packages/injecteo_models"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "1.0.0"
   io:
     dependency: transitive
     description:
