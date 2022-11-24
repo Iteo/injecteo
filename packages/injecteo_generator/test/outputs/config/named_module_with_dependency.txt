@@ -1,0 +1,6 @@
+class _$NamedModule extends NamedModule {_$NamedModule(this.serviceLocator);
+
+final ServiceLocator serviceLocator;
+
+@override FakeModuleDependency get dependency => namedModule.dependency;
+ }

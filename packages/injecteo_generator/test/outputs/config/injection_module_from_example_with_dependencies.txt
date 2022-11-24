@@ -1,0 +1,3 @@
+class MyInjectionModule extends BaseInjectionModule {@override Future<void> registerDependencies(ServiceLocator serviceLocator, {String? environment, EnvironmentFilter? environmentFilter, }) async  { final serviceLocatorHelper = ServiceLocatorHelper(serviceLocator, environment, environmentFilter, );
+ await serviceLocatorHelper.registerLazySingletonAsync<InjectionRepository>(() async  => SimpleRepository.dependency(), preResolve: true, ); } 
+ }

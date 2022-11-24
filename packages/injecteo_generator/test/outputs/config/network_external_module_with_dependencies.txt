@@ -1,0 +1,2 @@
+class _$NetworkExternalModule extends NetworkExternalModule {@override ApiService getApiService() => networkExternalModule.getApiService();
+ }

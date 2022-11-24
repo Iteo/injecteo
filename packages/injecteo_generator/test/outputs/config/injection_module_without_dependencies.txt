@@ -1,0 +1,2 @@
+class MyInjectionModule extends BaseInjectionModule {@override void registerDependencies(ServiceLocator serviceLocator, {String? environment, EnvironmentFilter? environmentFilter, }) { final serviceLocatorHelper = ServiceLocatorHelper(serviceLocator, environment, environmentFilter, ); } 
+ }

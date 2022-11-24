@@ -1,0 +1,5 @@
+class MyInjectionModule extends BaseInjectionModule {@override Future<void> registerDependencies(ServiceLocator serviceLocator, {String? environment, EnvironmentFilter? environmentFilter, }) async  { final serviceLocatorHelper = ServiceLocatorHelper(serviceLocator, environment, environmentFilter, );
+final demoExternalModule = _$DemoExternalModule(serviceLocator);
+serviceLocatorHelper.registerSingleton<Demo>(() => demoExternalModule.DemoInitializer);
+ await serviceLocatorHelper.registerLazySingletonAsync<ModuleDependency>(() async  => ModuleDependency.dependency(), preResolve: true, ); } 
+ }

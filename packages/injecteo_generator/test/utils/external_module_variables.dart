@@ -34,7 +34,7 @@ const _singletonDependency = DependencyConfig(
       type: ImportableType(name: 'Storage'),
       paramName: 'storage',
       isPositional: true,
-    )
+    ),
   ],
 );
 
@@ -49,3 +49,41 @@ const _factoryDependency = DependencyConfig(
 
 const _expectedEmptyDemoExternalModule =
     'class _\$DemoExternalModule extends DemoExternalModule { }\n';
+
+const _inputDependency = DependencyConfig(
+  type: ImportableType(
+    name: 'ModuleDependency',
+    import: 'package:example/some_external_module/some_class.dart',
+    isNullable: false,
+    typeArguments: [],
+  ),
+  typeImplementation: ImportableType(
+    name: 'ModuleDependency',
+    import: 'package:example/some_external_module/some_class.dart',
+    isNullable: false,
+    typeArguments: [],
+  ),
+  injectionModuleConfig: InjectionModuleConfig(
+    moduleName: 'OtherInjectionModule',
+  ),
+  preResolve: true,
+  isAsync: true,
+  constructorName: 'dependency',
+  dependencies: [],
+  environments: [],
+  dependencyType: DependencyType.lazySingleton,
+);
+
+const _injectionType = ImportableType(
+  name: 'InjectionRepository',
+  import: 'package:example/injection_module/simple_module.dart',
+  isNullable: false,
+  typeArguments: [],
+);
+
+const _injectionTypeImplementation = ImportableType(
+  name: 'SimpleRepository',
+  import: 'package:example/injection_module/simple_module.dart',
+  isNullable: false,
+  typeArguments: [],
+);

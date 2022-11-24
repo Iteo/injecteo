@@ -1,0 +1,2 @@
+class _$AbstractSimpleModule extends AbstractSimpleModule {@override ModuleDependency get dependency => abstractSimpleModule.dependency;
+ }

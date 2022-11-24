@@ -5,7 +5,7 @@ import 'di.config.dart';
 final sl = GetItServiceLocator.instance;
 
 @injecteoConfig
-void configureDependencies(String env) => $injecteoConfig(
+Future<void> configureDependencies(String env) async => $injecteoConfig(
       sl,
       environment: env,
     );

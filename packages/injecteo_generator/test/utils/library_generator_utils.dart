@@ -31,10 +31,9 @@ String runBuildRegisterFunction(
 }
 
 String runBuildExternalModuleClass(
-  DependencyConfig dependencyConfig, {
+  ExternalModuleConfig? externalModuleConfig, {
   List<DependencyConfig> dependencies = const [],
 }) {
-  final externalModuleConfig = dependencyConfig.externalModuleConfig;
   if (externalModuleConfig != null) {
     return _buildExternalModuleClass(
       externalModuleConfig: externalModuleConfig,
@@ -43,6 +42,37 @@ String runBuildExternalModuleClass(
   }
 
   throw TestFailure('externalModuleConfig == null');
+}
+
+String runBuildInjectionModuleClass(
+  InjectionModuleConfig? injectionModuleConfig, {
+  List<DependencyConfig> dependencies = const [],
+}) {
+  if (injectionModuleConfig != null) {
+    return _buildInjectionModuleClass(
+      injectionModuleConfig: injectionModuleConfig,
+      dependencies: dependencies,
+    );
+  }
+
+  throw TestFailure('injectionModuleConfig == null');
+}
+
+LibraryGenerator _getGenerator([
+  List<DependencyConfig>? dependencies,
+  String configFunctionName = 'configureInjecteo',
+]) {
+  return LibraryGenerator(
+    dependencies: dependencies ?? [],
+    configFunctionName: configFunctionName,
+  );
+}
+
+DartEmitter _getDartEmitter() {
+  return DartEmitter(
+    orderDirectives: true,
+    useNullSafetySyntax: true,
+  );
 }
 
 String _buildExternalModuleClass({
@@ -54,25 +84,26 @@ String _buildExternalModuleClass({
     externalModuleConfig: externalModuleConfig,
     dependencyConfigs: dependencies.toSet(),
   );
+
+  return _generateAcceptedCode(code);
+}
+
+String _buildInjectionModuleClass({
+  required InjectionModuleConfig injectionModuleConfig,
+  required List<DependencyConfig> dependencies,
+}) {
+  final generator = _getGenerator(dependencies);
+  final code = generator.buildInjectionModuleClass(
+    injectionModuleConfig: injectionModuleConfig,
+    dependencyConfigs: dependencies.toSet(),
+  );
+
+  return _generateAcceptedCode(code);
+}
+
+String _generateAcceptedCode(Class code) {
   final emitter = _getDartEmitter();
   final acceptedCode = code.accept(emitter);
 
   return acceptedCode.toString();
-}
-
-DartEmitter _getDartEmitter() {
-  return DartEmitter(
-    orderDirectives: true,
-    useNullSafetySyntax: true,
-  );
-}
-
-LibraryGenerator _getGenerator([
-  List<DependencyConfig>? dependencies,
-  String configFunctionName = 'configureInjecteo',
-]) {
-  return LibraryGenerator(
-    dependencies: dependencies ?? [],
-    configFunctionName: configFunctionName,
-  );
 }
