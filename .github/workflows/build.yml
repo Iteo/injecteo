@@ -3,6 +3,7 @@ name: Build
 on:
   pull_request:
     branches: [master, develop, main]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -21,7 +22,10 @@ jobs:
 
       - name: Install coverage
         run: dart pub global activate coverage
-        
+
+      - name: Install lcov
+        run: sudo apt-get install lcov
+
       - name: Melos Bootstrap
         run: melos bs
 
