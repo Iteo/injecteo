@@ -23,6 +23,9 @@ jobs:
       - name: Install coverage
         run: dart pub global activate coverage
 
+      - name: Install lcov
+        run: apt-get install lcov
+
       - name: Melos Bootstrap
         run: melos bs
 
