@@ -309,7 +309,7 @@ packages:
       path: "../../packages/injecteo_generator"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.0.1"
   injecteo_models:
     dependency: "direct overridden"
     description:
