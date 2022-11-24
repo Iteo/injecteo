@@ -36,7 +36,8 @@ class TaskListPageCubit extends Cubit<TaskListPageState> {
     _registerLocalNotificationUseCase();
     _loadTaskList();
     emit(TaskListPageState.idle(_taskList));
-    _listChangeStreamSubscription = _getTaskListChangeStreamUseCase().listen((_) => _reloadTaskList());
+    _listChangeStreamSubscription =
+        _getTaskListChangeStreamUseCase().listen((_) => _reloadTaskList());
   }
 
   void changeTaskStatus(Task task) {

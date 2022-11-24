@@ -18,5 +18,6 @@ class TaskDto {
 
   Map<String, dynamic> toJson() => _$TaskDtoToJson(this);
 
-  factory TaskDto.formJson(Map<String, dynamic> json) => _$TaskDtoFromJson(json);
+  factory TaskDto.formJson(Map<String, dynamic> json) =>
+      _$TaskDtoFromJson(json);
 }

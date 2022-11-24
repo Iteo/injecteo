@@ -91,7 +91,9 @@ class TaskPage extends HookWidget {
                 height: AppDimens.ml,
               ),
               Text(
-                taskId == null ? LocaleKeys.task_add_label.tr() : LocaleKeys.task_update_label.tr(),
+                taskId == null
+                    ? LocaleKeys.task_add_label.tr()
+                    : LocaleKeys.task_update_label.tr(),
                 style: typography.h1,
               ),
               const SizedBox(
@@ -135,37 +137,47 @@ class TaskPage extends HookWidget {
                       child: DateTimePicker(
                         type: DateTimePickerType.dateTimeSeparate,
                         dateMask: dateTimeMask,
-                        initialValue: dueDate != null ? dueDate.toString() : DateTime.now().toString(),
+                        initialValue: dueDate != null
+                            ? dueDate.toString()
+                            : DateTime.now().toString(),
                         firstDate: DateTime(nowDateTime.year),
-                        lastDate: DateTime(nowDateTime.year + 10, nowDateTime.month, nowDateTime.day),
+                        lastDate: DateTime(nowDateTime.year + 10,
+                            nowDateTime.month, nowDateTime.day),
                         dateLabelText: 'Date',
                         timeLabelText: 'Hour',
                         onChanged: (value) => cubit.setDueDate(value),
                       ),
                     ),
                     Container(
-                      margin: const EdgeInsets.symmetric(vertical: AppDimens.ml),
+                      margin:
+                          const EdgeInsets.symmetric(vertical: AppDimens.ml),
                       height: AppDimens.xc,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                          color:
-                              taskName.errorText != null ? colors.primaryButtonDisabledFill : colors.primaryButtonFill,
+                          color: taskName.errorText != null
+                              ? colors.primaryButtonDisabledFill
+                              : colors.primaryButtonFill,
                           borderRadius: BorderRadius.circular(AppDimens.xl)),
                       child: TextButton(
                         onPressed: () => cubit.save(),
                         child: Text(
-                          taskId == null ? LocaleKeys.operation_add.tr() : LocaleKeys.operation_update.tr(),
+                          taskId == null
+                              ? LocaleKeys.operation_add.tr()
+                              : LocaleKeys.operation_update.tr(),
                           style: typography.buttonText,
                         ),
                       ),
                     ),
                     taskId != null
                         ? Container(
-                            margin: const EdgeInsets.symmetric(vertical: AppDimens.ml),
+                            margin: const EdgeInsets.symmetric(
+                                vertical: AppDimens.ml),
                             height: AppDimens.xc,
                             width: double.infinity,
                             decoration: BoxDecoration(
-                                color: colors.primaryButtonFill, borderRadius: BorderRadius.circular(AppDimens.xl)),
+                                color: colors.primaryButtonFill,
+                                borderRadius:
+                                    BorderRadius.circular(AppDimens.xl)),
                             child: TextButton(
                               onPressed: () => cubit.deleteTask(taskId!),
                               child: Text(

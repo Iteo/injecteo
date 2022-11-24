@@ -15,11 +15,15 @@ class TaskDataSource {
   List<TaskDto> getTaskList() {
     List<String>? taskListData = storage.getStringList(taskListKey);
 
-    return taskListData?.map((String task) => TaskDto.formJson(json.decode(task))).toList() ?? [];
+    return taskListData
+            ?.map((String task) => TaskDto.formJson(json.decode(task)))
+            .toList() ??
+        [];
   }
 
   Future<void> saveTaskList(List<TaskDto> taskList) async {
-    List<String> taskListData = taskList.map((taskDto) => json.encode(taskDto).toString()).toList();
+    List<String> taskListData =
+        taskList.map((taskDto) => json.encode(taskDto).toString()).toList();
 
     await storage.setStringList(taskListKey, taskListData);
   }

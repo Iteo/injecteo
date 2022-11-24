@@ -10,4 +10,5 @@ const dev = Environment(AppEnv.devName);
 const prod = Environment(AppEnv.prodName);
 
 @InjecteoConfig(preferRelativeImports: false)
-Future<void> configureDependencies(String env) async => $injecteoConfig(getIt, environment: env);
+Future<void> configureDependencies(String env) async =>
+    $injecteoConfig(getIt, environment: env);

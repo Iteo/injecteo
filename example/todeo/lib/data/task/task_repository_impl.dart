@@ -17,7 +17,10 @@ class TaskRepositoryImpl implements TaskRepository {
 
   @override
   List<Task> getTaskList() {
-    return _taskDataSource.getTaskList().map((taskDto) => _taskDtoMapper.from(taskDto)).toList();
+    return _taskDataSource
+        .getTaskList()
+        .map((taskDto) => _taskDtoMapper.from(taskDto))
+        .toList();
   }
 
   @override

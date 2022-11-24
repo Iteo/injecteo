@@ -36,7 +36,8 @@ class NotificationRepositoryImpl implements NotificationRepository {
     String channel,
   ) async {
     tz_data.initializeTimeZones();
-    final scheduleTime = tz.TZDateTime.fromMillisecondsSinceEpoch(tz.local, endTime);
+    final scheduleTime =
+        tz.TZDateTime.fromMillisecondsSinceEpoch(tz.local, endTime);
 
     final androidDetail = AndroidNotificationDetails(
       channel,
@@ -58,7 +59,8 @@ class NotificationRepositoryImpl implements NotificationRepository {
       body,
       scheduleTime,
       noticeDetail,
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
       androidAllowWhileIdle: true,
     );
   }

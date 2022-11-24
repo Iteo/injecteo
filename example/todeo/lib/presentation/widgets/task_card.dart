@@ -63,9 +63,13 @@ class TaskCard extends HookWidget {
           ),
           title: Text(
             task.name,
-            style: task.done ? typography.taskCardTextDone : typography.taskCardText,
+            style: task.done
+                ? typography.taskCardTextDone
+                : typography.taskCardText,
           ),
-          subtitle: Text(task.dueDate != null ? formatter.format(task.dueDate!) : '', style: typography.b2),
+          subtitle: Text(
+              task.dueDate != null ? formatter.format(task.dueDate!) : '',
+              style: typography.b2),
         ),
       ),
     );
