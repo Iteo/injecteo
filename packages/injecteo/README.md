@@ -43,14 +43,14 @@ The additional benefits are:
 
 Install package and generator
 
-```dart
+```sh
 flutter pub add injecteo
 flutter pub add --dev injecteo_generator
 ```
 
 Or manually add the dependency in `pubspec.yaml`
 
-```dart
+```yaml
 dependencies:
   injecteo:
 
@@ -60,7 +60,7 @@ dev_dependencies:
 
 Annotate the classes and run generator (build or watch)
 
-```dart
+```sh
 flutter run build_runner build
 ```
 
@@ -82,9 +82,9 @@ final sl = GetItServiceLocator.instance;
 
 @injecteoConfig
 Future<void> configureDependencies(String env) => $injecteoConfig(
-      sl,
-      environment: env,
-    );
+    sl,
+    environment: env,
+);
 ```
 
 ## Annotations
@@ -434,7 +434,7 @@ serviceLocatorHelper.registerFactory<String>(
 
 Make sure you saved the files before running the generator. If you have conflicts or errors in generated file, try to clean and rebuild.
 
-```dart
+```sh
 flutter pub run build_runner clean
 ```
 
