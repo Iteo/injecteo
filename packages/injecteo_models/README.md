@@ -1,3 +1,5 @@
+# injecteo_models
+
 Internal models used by [injecteo_generator].\
 Models are generated using [freezed] and [json_serializable]\
 This package does nothing without [injecteo_generator].
