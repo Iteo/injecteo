@@ -38,12 +38,16 @@ For details, please see each folder README files.
 Packages use Melos with `usePubspecOverrides: true`.\
 Local packages are linked via Melos-generated `pubspec_overrides.yaml`.
 
-    melos bs
-    melos run get
-    melos run generate
-    melos run format
+```sh
+melos bs
+melos run get
+melos run generate
+melos run format
+```
 
 Before commit
 
-    melos run format
-    melos run test
+```sh
+melos run format
+melos run test
+```
