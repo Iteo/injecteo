@@ -8,6 +8,15 @@ class ExternalModuleConfig {
     required this.initializerName,
   });
 
+  factory ExternalModuleConfig.fromJson(Map<String, dynamic> json) {
+    return ExternalModuleConfig(
+      isAbstract: json['isAbstract'] as bool,
+      isMethod: json['isMethod'] as bool,
+      type: ImportableType.fromJson(json['type'] as Map<String, dynamic>),
+      initializerName: json['initializerName'] as String,
+    );
+  }
+
   final bool isAbstract;
   final bool isMethod;
   final ImportableType type;
@@ -22,8 +31,7 @@ class ExternalModuleConfig {
     if ((isAbstract == null || identical(isAbstract, this.isAbstract)) &&
         (isModuleMethod == null || identical(isModuleMethod, isMethod)) &&
         (module == null || identical(module, type)) &&
-        (initializerName == null ||
-            identical(initializerName, this.initializerName))) {
+        (initializerName == null || identical(initializerName, this.initializerName))) {
       return this;
     }
 
@@ -32,15 +40,6 @@ class ExternalModuleConfig {
       isMethod: isModuleMethod ?? isMethod,
       type: module ?? type,
       initializerName: initializerName ?? this.initializerName,
-    );
-  }
-
-  factory ExternalModuleConfig.fromJson(Map<String, dynamic> json) {
-    return ExternalModuleConfig(
-      isAbstract: json['isAbstract'] as bool,
-      isMethod: json['isMethod'] as bool,
-      type: ImportableType.fromJson(json['type'] as Map<String, dynamic>),
-      initializerName: json['initializerName'] as String,
     );
   }
 
@@ -57,9 +56,7 @@ class ExternalModuleConfig {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ExternalModuleConfig &&
-          runtimeType == other.runtimeType &&
-          type == other.type);
+      (other is ExternalModuleConfig && runtimeType == other.runtimeType && type == other.type);
 
   @override
   int get hashCode => type.hashCode;

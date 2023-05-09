@@ -21,7 +21,7 @@ void runExternalModulesTestsFromExample() {
           externalModuleConfig,
           dependencies: [],
         );
-        const expected = 'class _\$AbstractSimpleModule '
+        const expected = r'class _$AbstractSimpleModule '
             'extends AbstractSimpleModule { }\n';
 
         expectChecksumEquals(result, expected);
@@ -116,8 +116,7 @@ void runExternalModulesTestsFromExample() {
           externalModuleConfig,
           dependencies: [],
         );
-        const expected =
-            'class _\$NetworkExternalModule extends NetworkExternalModule { }\n';
+        const expected = 'class _\$NetworkExternalModule extends NetworkExternalModule { }\n';
 
         expectChecksumEquals(result, expected);
       },
@@ -132,8 +131,7 @@ void runExternalModulesTestsFromExample() {
             apiServiceDependency,
           ],
         );
-        const expected =
-            'class _\$NetworkExternalModule extends NetworkExternalModule { }\n';
+        const expected = 'class _\$NetworkExternalModule extends NetworkExternalModule { }\n';
 
         expectChecksumEquals(result, expected);
       },
@@ -190,16 +188,14 @@ void runExternalModulesTestsFromExample() {
                 name: 'FakeModuleDependency',
                 isNullable: false,
                 typeArguments: [],
-                import:
-                    'package:example/external_module/named_module_fake.dart',
+                import: 'package:example/external_module/named_module_fake.dart',
               ),
               externalModuleConfig: externalModuleConfig,
               dependencies: const [
                 InjectedDependency(
                   type: ImportableType(
                     name: 'ModuleDependency',
-                    import:
-                        'package:example/external_module/simple_module.dart',
+                    import: 'package:example/external_module/simple_module.dart',
                     isNullable: false,
                     typeArguments: [],
                   ),

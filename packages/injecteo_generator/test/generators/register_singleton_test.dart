@@ -12,7 +12,7 @@ void main() {
     'Register Singleton',
     () {
       test(
-        "Simple Singleton",
+        'Simple Singleton',
         () {
           expect(
             runBuildRegisterFunction(
@@ -29,7 +29,7 @@ void main() {
       );
 
       test(
-        "Singleton with dispose method",
+        'Singleton with dispose method',
         () {
           expect(
             runBuildRegisterFunction(
@@ -40,7 +40,7 @@ void main() {
                 injectionModuleConfig: injectionModuleConfig,
                 disposeFunctionConfig: DisposeFunctionConfig(
                   isInstance: true,
-                  name: "dispose",
+                  name: 'dispose',
                 ),
               ),
             ),
@@ -50,7 +50,7 @@ void main() {
       );
 
       test(
-        "Singleton with external dispose method",
+        'Singleton with external dispose method',
         () {
           expect(
             runBuildRegisterFunction(
@@ -61,8 +61,8 @@ void main() {
                 injectionModuleConfig: injectionModuleConfig,
                 disposeFunctionConfig: DisposeFunctionConfig(
                   isInstance: false,
-                  name: "disposeCallback",
-                  importableType: ImportableType(name: "disposeCallback"),
+                  name: 'disposeCallback',
+                  importableType: ImportableType(name: 'disposeCallback'),
                 ),
               ),
             ),
@@ -72,7 +72,7 @@ void main() {
       );
 
       test(
-        "Register Singleton for environment",
+        'Register Singleton for environment',
         () {
           expect(
             runBuildRegisterFunction(
@@ -90,7 +90,7 @@ void main() {
       );
 
       test(
-        "Abstract Singleton",
+        'Abstract Singleton',
         () {
           expect(
             runBuildRegisterFunction(
@@ -107,7 +107,7 @@ void main() {
       );
 
       test(
-        "Named Singleton",
+        'Named Singleton',
         () {
           expect(
             runBuildRegisterFunction(
@@ -125,7 +125,7 @@ void main() {
       );
 
       test(
-        "Async Singleton",
+        'Async Singleton',
         () {
           expect(
             runBuildRegisterFunction(
@@ -143,7 +143,7 @@ void main() {
       );
 
       test(
-        "Singleton with positional dependencies",
+        'Singleton with positional dependencies',
         () {
           expect(
             runBuildRegisterFunction(
@@ -167,7 +167,7 @@ void main() {
       );
 
       test(
-        "Singleton with async positional dependencies",
+        'Singleton with async positional dependencies',
         () {
           const dep = DependencyConfig(
             dependencyType: DependencyType.singleton,
@@ -203,7 +203,7 @@ void main() {
       );
 
       test(
-        "Singleton with named dependencies",
+        'Singleton with named dependencies',
         () {
           expect(
             runBuildRegisterFunction(
@@ -227,7 +227,7 @@ void main() {
       );
 
       test(
-        "Singleton with async named dependencies",
+        'Singleton with async named dependencies',
         () {
           const dep = DependencyConfig(
             dependencyType: DependencyType.singleton,
@@ -265,7 +265,7 @@ void main() {
       );
 
       test(
-        "Singleton with async and preResolve named dependencies",
+        'Singleton with async and preResolve named dependencies',
         () {
           const dep = DependencyConfig(
             dependencyType: DependencyType.singleton,

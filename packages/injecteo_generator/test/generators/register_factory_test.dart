@@ -12,7 +12,7 @@ void main() {
     'Register Factory',
     () {
       test(
-        "Simple Factory",
+        'Simple Factory',
         () {
           expect(
             runBuildRegisterFunction(
@@ -29,7 +29,7 @@ void main() {
       );
 
       test(
-        "Abstract factory with different implementation",
+        'Abstract factory with different implementation',
         () {
           expect(
             runBuildRegisterFunction(
@@ -46,7 +46,7 @@ void main() {
       );
 
       test(
-        "Register Factory for environment",
+        'Register Factory for environment',
         () {
           expect(
             runBuildRegisterFunction(
@@ -64,7 +64,7 @@ void main() {
       );
 
       test(
-        "Factory async",
+        'Factory async',
         () {
           expect(
             runBuildRegisterFunction(
@@ -82,7 +82,7 @@ void main() {
       );
 
       test(
-        "Factory with positional dependencies",
+        'Factory with positional dependencies',
         () {
           expect(
             runBuildRegisterFunction(
@@ -106,7 +106,7 @@ void main() {
       );
 
       test(
-        "Factory with async positional dependencies",
+        'Factory with async positional dependencies',
         () {
           const dep = DependencyConfig(
             dependencyType: DependencyType.factory,
@@ -144,7 +144,7 @@ void main() {
       );
 
       test(
-        "Factory with named dependencies",
+        'Factory with named dependencies',
         () {
           expect(
             runBuildRegisterFunction(
@@ -158,7 +158,7 @@ void main() {
                     type: ImportableType(name: 'Storage'),
                     paramName: 'storage',
                     isPositional: false,
-                    instanceName: "storageImpl",
+                    instanceName: 'storageImpl',
                   )
                 ],
               ),
@@ -169,7 +169,7 @@ void main() {
       );
 
       test(
-        "Factory with async named dependencies",
+        'Factory with async named dependencies',
         () {
           const dep = DependencyConfig(
             type: ImportableType(name: 'Demo'),
@@ -208,7 +208,7 @@ void main() {
       );
 
       test(
-        "Factory with parametrized type",
+        'Factory with parametrized type',
         () {
           expect(
             runBuildRegisterFunction(
@@ -236,7 +236,7 @@ void main() {
                 ],
               ),
             ),
-            "serviceLocatorHelper.registerFactory<Demo<String>>(() => Demo<String>(storage: serviceLocator.get<Storage>()));",
+            'serviceLocatorHelper.registerFactory<Demo<String>>(() => Demo<String>(storage: serviceLocator.get<Storage>()));',
           );
         },
       );
