@@ -16,8 +16,8 @@ class ImportableTypeResolverImpl extends ImportableTypeResolver {
     }
 
     for (final lib in libs) {
-      final libraryExportContainsElement =
-          !_isCoreDartType(lib) && lib.exportNamespace.definedNames.values.contains(element);
+      final libraryExportContainsElement = !_isCoreDartType(lib) &&
+          lib.exportNamespace.definedNames.values.contains(element);
 
       if (libraryExportContainsElement) {
         return lib.identifier;
@@ -35,7 +35,8 @@ class ImportableTypeResolverImpl extends ImportableTypeResolver {
     FunctionType function, [
     ExecutableElement? executableElement,
   ]) {
-    final functionElement = executableElement ?? function.element ?? function.alias?.element;
+    final functionElement =
+        executableElement ?? function.element ?? function.alias?.element;
     if (functionElement == null) {
       throw 'Can not resolve function type \nTry using an alias e.g typedef MyFunction = ${function.getDisplayString(withNullability: false)};';
     }
@@ -77,7 +78,8 @@ class ImportableTypeResolverImpl extends ImportableTypeResolver {
         if (type.element is TypeParameterElement) {
           importableTypes.add(const ImportableType(name: 'dynamic'));
         } else {
-          final name = type.element?.name ?? type.getDisplayString(withNullability: false);
+          final name = type.element?.name ??
+              type.getDisplayString(withNullability: false);
           final import = resolveImport(type.element);
           importableTypes.add(
             ImportableType(

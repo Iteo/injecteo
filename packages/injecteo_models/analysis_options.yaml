@@ -8,3 +8,4 @@ linter:
   rules:
     always_use_package_imports: false
     prefer_relative_imports: true
+    comment_references: false

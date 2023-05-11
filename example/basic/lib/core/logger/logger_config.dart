@@ -16,6 +16,6 @@ abstract class LoggerConfig {
   @prod
   LogTree get prodLogTree => DebugTree(
         useColors: true,
-        logLevels: ["W", "E"],
+        logLevels: ['W', 'E'],
       );
 }

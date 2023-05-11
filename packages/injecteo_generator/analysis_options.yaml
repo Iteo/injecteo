@@ -18,3 +18,5 @@ linter:
     always_use_package_imports: false
     sort_constructors_first: true
     prefer_relative_imports: true
+    comment_references: false
+    only_throw_errors: false

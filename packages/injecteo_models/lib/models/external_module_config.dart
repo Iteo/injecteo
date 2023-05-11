@@ -31,7 +31,8 @@ class ExternalModuleConfig {
     if ((isAbstract == null || identical(isAbstract, this.isAbstract)) &&
         (isModuleMethod == null || identical(isModuleMethod, isMethod)) &&
         (module == null || identical(module, type)) &&
-        (initializerName == null || identical(initializerName, this.initializerName))) {
+        (initializerName == null ||
+            identical(initializerName, this.initializerName))) {
       return this;
     }
 
@@ -56,7 +57,9 @@ class ExternalModuleConfig {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ExternalModuleConfig && runtimeType == other.runtimeType && type == other.type);
+      (other is ExternalModuleConfig &&
+          runtimeType == other.runtimeType &&
+          type == other.type);
 
   @override
   int get hashCode => type.hashCode;

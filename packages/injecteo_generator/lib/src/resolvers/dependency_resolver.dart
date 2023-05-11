@@ -33,10 +33,12 @@ class DependencyResolver {
   Iterable<DependencyConfig> resolve(
     ClassElement classElement,
   ) {
-    final hasInjectionModuleAnnotation = injectionModuleChecker.hasAnnotationOf(classElement);
+    final hasInjectionModuleAnnotation =
+        injectionModuleChecker.hasAnnotationOf(classElement);
 
     if (hasInjectionModuleAnnotation) {
-      final injectionModuleAnnotation = injectionModuleChecker.firstAnnotationOf(
+      final injectionModuleAnnotation =
+          injectionModuleChecker.firstAnnotationOf(
         classElement,
         throwOnUnresolved: false,
       );
@@ -57,7 +59,8 @@ class DependencyResolver {
       );
     }
 
-    final hasExternalModuleAnnotation = externalModuleChecker.hasAnnotationOfExact(classElement);
+    final hasExternalModuleAnnotation =
+        externalModuleChecker.hasAnnotationOfExact(classElement);
 
     if (hasExternalModuleAnnotation) {
       if (!classElement.isAbstract) {
@@ -167,19 +170,25 @@ class DependencyResolver {
       final annotation = ConstantReader(firstAnnotation);
       if (annotation.instanceOf(lazySingletonChecker)) {
         _dependencyType = DependencyType.lazySingleton;
-        disposeFuncFromAnnotation = annotation.peek('dispose')?.objectValue.toFunctionValue();
+        disposeFuncFromAnnotation =
+            annotation.peek('dispose')?.objectValue.toFunctionValue();
       } else if (annotation.instanceOf(singletonChecker)) {
         _dependencyType = DependencyType.singleton;
-        disposeFuncFromAnnotation = annotation.peek('dispose')?.objectValue.toFunctionValue();
+        disposeFuncFromAnnotation =
+            annotation.peek('dispose')?.objectValue.toFunctionValue();
       }
       abstractType = annotation.peek('as')?.typeValue;
-      inlineEnv = annotation.peek('env')?.listValue.map((e) => e.toStringValue()!).toList();
+      inlineEnv = annotation
+          .peek('env')
+          ?.listValue
+          .map((e) => e.toStringValue()!)
+          .toList();
     }
 
     if (abstractType != null) {
       final abstractChecker = TypeChecker.fromStatic(abstractType);
-      final abstractSubtype =
-          c.allSupertypes.firstOrNull((type) => abstractChecker.isExactly(type.element));
+      final abstractSubtype = c.allSupertypes
+          .firstOrNull((type) => abstractChecker.isExactly(type.element));
 
       if (abstractSubtype == null) {
         throw InvalidGenerationSourceError(
@@ -200,8 +209,10 @@ class DependencyResolver {
 
     _preResolve = preResolveChecker.hasAnnotationOfExact(annotatedElement);
 
-    final name =
-        namedChecker.firstAnnotationOfExact(annotatedElement)?.getField('name')?.toStringValue();
+    final name = namedChecker
+        .firstAnnotationOfExact(annotatedElement)
+        ?.getField('name')
+        ?.toStringValue();
     if (name != null) {
       if (name.isNotEmpty) {
         _instanceName = name;
@@ -210,8 +221,8 @@ class DependencyResolver {
       }
     }
 
-    final disposeMethod =
-        c.methods.firstOrNull((m) => disposeMethodChecker.hasAnnotationOfExact(m));
+    final disposeMethod = c.methods
+        .firstOrNull((m) => disposeMethodChecker.hasAnnotationOfExact(m));
     if (disposeMethod != null) {
       if (_dependencyType == DependencyType.factory) {
         throw InvalidGenerationSourceError(
@@ -234,8 +245,8 @@ class DependencyResolver {
       );
     } else if (disposeFuncFromAnnotation != null) {
       final params = disposeFuncFromAnnotation.parameters;
-      final notMatchingSignature =
-          params.length != 1 || _typeResolver.resolveType(params.first.type) != _type;
+      final notMatchingSignature = params.length != 1 ||
+          _typeResolver.resolveType(params.first.type) != _type;
       if (notMatchingSignature) {
         throw InvalidGenerationSourceError(
           'Dispose function for $_type must have the same signature as FutureOr Function($_type instance)',

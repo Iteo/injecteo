@@ -1,3 +1,4 @@
+/// Internal models used by injecteo_generator
 library injecteo_models;
 
 export 'models/dependency_config.dart';

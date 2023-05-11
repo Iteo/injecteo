@@ -1,6 +1,5 @@
+import 'package:di_example/core/di/di.config.dart';
 import 'package:injecteo/injecteo.dart';
-
-import 'di.config.dart';
 
 final sl = GetItServiceLocator.instance;
 
