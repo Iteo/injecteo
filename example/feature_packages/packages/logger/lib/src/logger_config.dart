@@ -1,7 +1,7 @@
 import 'package:fimber/fimber.dart';
 import 'package:injecteo/injecteo.dart';
 
-import 'di/logger_injection_module.dart';
+import 'package:logger/src/di/logger_injection_module.dart';
 
 @loggerInjectionModule
 @externalModule
@@ -17,6 +17,6 @@ abstract class LoggerConfig {
   @prod
   LogTree get prodLogTree => DebugTree(
         useColors: true,
-        logLevels: ["W", "E"],
+        logLevels: ['W', 'E'],
       );
 }

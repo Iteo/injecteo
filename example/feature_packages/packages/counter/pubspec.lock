@@ -286,14 +286,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.7.0"
-  lints:
+  linteo:
     dependency: "direct dev"
     description:
-      name: lints
-      sha256: "5e4a9cd06d447758280a8ac2405101e0e2094d2a1dbdd3756aec3fe7775ba593"
+      name: linteo
+      sha256: ee1a2802c3b51e3f313eb48312d850baf4bdf86f7ccc5d99badb89e9017f5f3c
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.1"
+    version: "1.1.0"
   logger:
     dependency: "direct main"
     description:

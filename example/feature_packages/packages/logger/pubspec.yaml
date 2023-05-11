@@ -7,11 +7,11 @@ environment:
   sdk: ">=2.18.4 <3.0.0"
 
 dependencies:
-  injecteo: ^1.0.0
   fimber: ^0.6.6
+  injecteo: ^1.0.0
 
 dev_dependencies:
   build_runner: ^2.3.2
   injecteo_generator: ^1.0.0
-  lints: ^2.0.0
+  linteo: ^1.1.0
   test: ^1.16.0

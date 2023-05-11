@@ -2,11 +2,13 @@
 .vscode
 .idea
 .DS_Store
+.dart_tool
 
 *.iml
 *.ipr
 *.iws
 .idea/
+
 
 coverage/
 *.class

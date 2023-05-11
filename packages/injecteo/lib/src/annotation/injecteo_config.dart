@@ -2,7 +2,7 @@
 ///
 class InjecteoConfig {
   const InjecteoConfig({
-    this.preferRelativeImports = true,
+    this.preferRelativeImports = false,
     this.configFunctionName = r'$injecteoConfig',
   });
 

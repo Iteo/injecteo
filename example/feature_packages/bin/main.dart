@@ -25,16 +25,16 @@ void main() async {
   }
 
   final counter = GetItServiceLocator.instance.get<CounterRepository>();
-  print("Initial value: ${counter.getValue()}");
-  print("Call increment method...");
+  print('Initial value: ${counter.getValue()}');
+  print('Call increment method...');
   counter.increment();
-  print("New value: ${counter.getValue()}");
+  print('New value: ${counter.getValue()}');
 
   final a = GetItServiceLocator.instance<Logger>();
   final b = GetItServiceLocator.instance.get<Logger>();
   print(
-    "Proof that instances are identical (supposed to be a singleton): identical: ${identical(a, b)}, equals: ${a == b}",
+    'Proof that instances are identical (supposed to be a singleton): identical: ${identical(a, b)}, equals: ${a == b}',
   );
-  a.d("Sample debug log");
-  b.e("Sample error log");
+  a.d('Sample debug log');
+  b.e('Sample error log');
 }

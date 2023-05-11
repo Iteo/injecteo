@@ -95,7 +95,7 @@ Marks a top-level function as a config function. You should annotate single top-
 
 | Parameter             | Type   | Description                                                   | Example            |
 | --------------------- | ------ | ------------------------------------------------------------- | ------------------ |
-| preferRelativeImports | bool   | If generated imports should be relative (default) or absolute | true               |
+| preferRelativeImports | bool   | If generated imports should be relative or absolute (default) | false              |
 | configFunctionName    | String | Name of the generated configure function                      | $configureInjecteo |
 
 ### @InjectionModule
