@@ -1,5 +1,10 @@
-include: package:lint/analysis_options.yaml
+include: package:linteo/analysis_options.yaml
+
+analyzer:
+  language:
+    strict-raw-types: false
 
 linter:
   rules:
-    - sort_constructors_first
+    sort_constructors_first: true
+    comment_references: false

@@ -35,10 +35,9 @@ scripts:
       --fail-fast \
       -- \
       dart pub global run coverage:test_with_coverage
-    select-package:
+    packageFilters:
       flutter: false
-      dir-exists:
-        - test
+      dirExists: test
 
   gen_coverage:
     run: |

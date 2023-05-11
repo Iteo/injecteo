@@ -1,3 +1,4 @@
+/// Logerr library
 library logger;
 
 export 'src/di/di.config.dart';

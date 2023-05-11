@@ -1,4 +1,4 @@
-include: package:lint/analysis_options.yaml
+include: package:linteo/analysis_options.yaml
 analyzer:
   exclude:
     - "**/*.g.dart"
@@ -7,4 +7,4 @@ analyzer:
 linter:
   rules:
     always_use_package_imports: false
-    prefer_relative_imports: true
+    comment_references: false

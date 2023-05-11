@@ -1,3 +1,4 @@
+/// Counter library
 library counter;
 
 export 'src/di/di.config.dart';

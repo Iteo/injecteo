@@ -55,7 +55,7 @@ class DependencyResolver {
       );
     } else {
       _injectionModuleConfig = const InjectionModuleConfig(
-        moduleName: "OtherInjectionModule",
+        moduleName: 'OtherInjectionModule',
       );
     }
 

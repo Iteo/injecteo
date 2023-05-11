@@ -8,6 +8,15 @@ class ExternalModuleConfig {
     required this.initializerName,
   });
 
+  factory ExternalModuleConfig.fromJson(Map<String, dynamic> json) {
+    return ExternalModuleConfig(
+      isAbstract: json['isAbstract'] as bool,
+      isMethod: json['isMethod'] as bool,
+      type: ImportableType.fromJson(json['type'] as Map<String, dynamic>),
+      initializerName: json['initializerName'] as String,
+    );
+  }
+
   final bool isAbstract;
   final bool isMethod;
   final ImportableType type;
@@ -32,15 +41,6 @@ class ExternalModuleConfig {
       isMethod: isModuleMethod ?? isMethod,
       type: module ?? type,
       initializerName: initializerName ?? this.initializerName,
-    );
-  }
-
-  factory ExternalModuleConfig.fromJson(Map<String, dynamic> json) {
-    return ExternalModuleConfig(
-      isAbstract: json['isAbstract'] as bool,
-      isMethod: json['isMethod'] as bool,
-      type: ImportableType.fromJson(json['type'] as Map<String, dynamic>),
-      initializerName: json['initializerName'] as String,
     );
   }
 

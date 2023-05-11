@@ -1,9 +1,8 @@
 import 'package:di_example/presentation/page/home/cubit/home_page_cubit.dart';
+import 'package:di_example/presentation/widget/say_hello/say_hello.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooked_bloc/hooked_bloc.dart';
-
-import '../../widget/say_hello/say_hello.dart';
 
 class HomePage extends HookWidget {
   const HomePage({super.key});
@@ -35,14 +34,14 @@ class HomePage extends HookWidget {
               ),
               Text(
                 '${state.counter}',
-                style: Theme.of(context).textTheme.headline4,
+                style: Theme.of(context).textTheme.headlineMedium,
               ),
             ],
           ),
           loading: (_) => const CircularProgressIndicator(),
           error: (state) => Text(
             state.message,
-            style: Theme.of(context).textTheme.bodyText1,
+            style: Theme.of(context).textTheme.bodyLarge,
           ),
         ),
       ),

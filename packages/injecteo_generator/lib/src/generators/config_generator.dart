@@ -19,17 +19,18 @@ class InjecteoConfigGenerator extends GeneratorForAnnotation<InjecteoConfig> {
     BuildStep buildStep,
   ) async {
     final preferRelativeImports =
-        annotation.read("preferRelativeImports").boolValue;
+        annotation.read('preferRelativeImports').boolValue;
     final targetFile = preferRelativeImports ? element.source?.uri : null;
     final configFunctionName =
         annotation.read('configFunctionName').stringValue;
 
-    final pattern = Glob("**.injecteo.json");
+    final pattern = Glob('**.injecteo.json');
     final jsonData = <Map<String, dynamic>>[];
 
     await for (final id in buildStep.findAssets(pattern)) {
-      final json = jsonDecode(await buildStep.readAsString(id));
-      jsonData.addAll([...json]);
+      final json =
+          jsonDecode(await buildStep.readAsString(id)) as List<dynamic>;
+      jsonData.addAll(json.map((e) => e as Map<String, dynamic>));
     }
 
     final dependencyConfig = <DependencyConfig>[];

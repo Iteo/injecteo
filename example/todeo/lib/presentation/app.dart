@@ -24,7 +24,7 @@ class App extends HookWidget {
       routeInformationParser: mainRouter.defaultRouteParser(),
       routerDelegate: mainRouter.delegate(),
       theme: ThemeData(
-        backgroundColor: appColors.appBackground,
+        scaffoldBackgroundColor: appColors.appBackground,
       ),
     );
   }

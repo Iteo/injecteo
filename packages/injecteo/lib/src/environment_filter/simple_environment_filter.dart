@@ -13,5 +13,5 @@ class SimpleEnvironmentFilter extends EnvironmentFilter {
   final EnvironmentFilterFunc filter;
 
   @override
-  bool canRegister(Set<String> depEnvironments) => filter(depEnvironments);
+  bool canRegister(Set<String> envs) => filter(envs);
 }

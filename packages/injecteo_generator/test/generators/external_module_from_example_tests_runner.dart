@@ -21,7 +21,7 @@ void runExternalModulesTestsFromExample() {
           externalModuleConfig,
           dependencies: [],
         );
-        const expected = 'class _\$AbstractSimpleModule '
+        const expected = r'class _$AbstractSimpleModule '
             'extends AbstractSimpleModule { }\n';
 
         expectChecksumEquals(result, expected);

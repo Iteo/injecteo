@@ -6,7 +6,7 @@ import 'package:injecteo/injecteo.dart';
 class SayHelloCubit extends Cubit<String> {
   SayHelloCubit(
     this._sayHelloUseCase,
-  ) : super("");
+  ) : super('');
 
   final SayHelloUseCase _sayHelloUseCase;
 

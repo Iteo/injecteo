@@ -1,3 +1,4 @@
+/// Dependency injection configuration using Service Locator pattern in a convenient way
 library injecteo;
 
 export 'src/annotation/dispose_method.dart';

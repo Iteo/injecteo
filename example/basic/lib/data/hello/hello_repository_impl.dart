@@ -2,7 +2,7 @@ import 'package:di_example/data/hello/hello_service.dart';
 import 'package:di_example/domain/hello/hello_repository.dart';
 import 'package:injecteo/injecteo.dart';
 
-@Named("impl1")
+@Named('impl1')
 @Inject(as: HelloService)
 class HelloServiceFirstImpl implements HelloService {
   @override
@@ -11,7 +11,7 @@ class HelloServiceFirstImpl implements HelloService {
   }
 }
 
-@Named("impl2")
+@Named('impl2')
 @Inject(as: HelloService)
 class HelloServiceSecondImpl implements HelloService {
   @override

@@ -29,8 +29,8 @@ abstract class ImportPathResolver {
       return null;
     }
     final fileUri = Uri.parse(path);
-    if (fileUri.scheme == "asset") {
-      return "/${fileUri.path}";
+    if (fileUri.scheme == 'asset') {
+      return '/${fileUri.path}';
     }
     return path;
   }
